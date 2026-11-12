@@ -6,6 +6,7 @@ import {consensusHistory,consensusStep,TOPOLOGIES,INITIAL,mean,spread,formationH
 import {beginnerHTML,guideFormulas} from '../docs/beginner.js';
 import {blocks} from '../docs/content.js';
 import {beginnerBlocks} from '../docs/beginner-content.js';
+import {actionStages,actionFields,actionMarkdown} from '../docs/research-actions.js';
 const katex=createRequire(import.meta.url)('../docs/vendor/katex/dist/katex.min.js');
 assert.deepEqual(consensusStep(INITIAL,TOPOLOGIES.path),[14,34,66,86]);
 for(const topology of ['path','ring','split'])for(const x of consensusHistory({topology}))assert(Math.abs(mean(x)-50)<1e-10);
@@ -28,6 +29,12 @@ assert(Math.abs(safetyProjection({distance:0,nominal:-1,kappa:1}).action)<1e-12)
 assert.equal(safetyProjection({conflict:true}).action,null);
 assert.equal(safetyProjection({distance:1,conflict:true}).feasible,true);
 const ids=new Set(blocks.map(b=>b.id));
+for(const stage of actionStages){
+  assert(ids.has(stage.block),'Action guidance must point to an existing block');
+  assert.equal(stage.example.length,actionFields.length);
+  const markdown=actionMarkdown(stage,Object.fromEntries(actionFields.map(([id],i)=>[id,stage.example[i]])));
+  assert.equal([...markdown.matchAll(/^## /gm)].length,5);
+}
 let guideLinks=0,mathCount=0;
 for(const view of ['start','research','lab'])for(const lab of view==='lab'?['consensus','formation','communication','safety']:['consensus']) {
   const html=beginnerHTML(view,lab);

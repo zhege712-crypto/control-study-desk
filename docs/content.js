@@ -2,8 +2,12 @@
 import { additionalBlocks } from './terms-expanded.js';
 import { beginnerBlocks } from './beginner-content.js';
 import { deepenBlocks } from './depth-content.js';
+import { foundationsBlocks } from './foundations-content.js';
+import { practiceBlocks } from './research-practice-content.js';
 export const groups = [
   { id: 'all', name: '全部区块', description: '从一个问题进入，沿着联系继续。' },
+  { id: 'foundations', name: '基础三问', description: '从运动、程序更新和反馈开始，不预设已经学过控制。' },
+  { id: 'practice', name: '研究实践', description: '把阅读接到问题、机制、证据与下一步决策。' },
   { id: 'starter', name: '入门与研究', description: '从具体例子认识多智能体，再把想法写成可检查的问题。' },
   { id: 'terms', name: '专业术语', description: '先读懂缩写和公式中的角色，再回到方法与论文。' },
   { id: 'model', name: '模型与预测', description: '先弄清系统如何变化，再讨论怎样决策。' },
@@ -216,4 +220,6 @@ export const blocks = deepenBlocks([
   },
   ...additionalBlocks,
   ...beginnerBlocks,
+  ...foundationsBlocks,
+  ...practiceBlocks,
 ]);

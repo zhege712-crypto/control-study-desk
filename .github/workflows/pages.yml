@@ -35,6 +35,8 @@ jobs:
         run: node tools/check_depth.mjs
       - name: Run downloadable Python teaching example
         run: python3 docs/examples/consensus_demo.py
+      - name: Check foundation and research starter fixtures
+        run: python3 docs/examples/research_starter.py --check
       - uses: actions/configure-pages@v5
       - uses: actions/upload-pages-artifact@v3
         with:

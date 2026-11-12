@@ -15,6 +15,14 @@
 .guide-section h2{font-size:21px;line-height:1.55;color:var(--ink);margin:0 0 16px}
 .guide-section h3{font-size:16px;color:var(--ink);line-height:1.6;margin:0 0 5px}
 .guide-section p{margin:0 0 15px;max-width:76ch}
+.research-actions>label{display:flex;align-items:center;flex-wrap:wrap;gap:12px;color:var(--ink)}
+.research-actions select{font:inherit;max-width:100%;padding:9px 12px;border:1px solid var(--line);border-radius:7px;background:var(--surface);color:var(--ink)}
+.action-guidance{margin:22px 0 12px;display:grid;grid-template-columns:8em minmax(0,1fr);gap:10px 20px}
+.action-guidance dt{font-weight:600;color:var(--ink)}
+.action-guidance dd{margin:0;max-width:70ch;overflow-wrap:anywhere}
+.guide-section pre{max-width:100%;overflow-x:auto;padding:16px;background:var(--surface);border:1px solid var(--line);border-radius:8px;font-size:13px;line-height:1.85}
+.block-detail pre{max-width:100%;overflow-x:auto;padding:14px;background:var(--reader-surface);border:1px solid var(--line);border-radius:8px;font-size:12px;line-height:1.85}
+@media(max-width:620px){.action-guidance{grid-template-columns:minmax(0,1fr);gap:4px}.action-guidance dd{margin-bottom:12px}}
 .question-links{display:grid;grid-template-columns:1fr 1fr;gap:14px 24px;justify-items:start}
 .learning-path{padding:0 0 0 24px;margin:8px 0 0}
 .learning-path li{padding:18px 0 18px 10px;border-top:1px solid var(--line);color:var(--blue)}

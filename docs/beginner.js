@@ -1,4 +1,5 @@
 import {INITIAL,TOPOLOGIES,mean,spread,disagreement,consensusHistory,formationHistory,communicationHistory,safetyProjection} from './lab-models.js';
+import {actionsHTML,mountActions} from './research-actions.js';
 
 const colors=['#265b87','#326a59','#73538c','#9c4c2d'];
 const names=['A','B','C','D'];
@@ -27,14 +28,16 @@ const exercise=(question,answer)=>`<details class="thinking-question"><summary>$
 
 function startHTML() {
   const path=[
+    ['补齐运动、程序和反馈','手算两步运动，解释一次状态更新和一次反馈。','motion-basics','从基础三问开始'],
     ['把一个系统说清楚','能说明谁是 agent、它知道什么、能改变什么。','mas-basics','看一个四车例子'],
     ['让一条局部规则跑起来','先手算一个 agent 的一次更新，再预测整组会怎样变化。','consensus-starter','读懂第一条控制律'],
     ['换一个目标，看看发生什么','区分状态一致、保持队形、跟踪目标与途中安全。','formation-starter','分清四类要求'],
     ['把论文读成一张问题卡','找出模型、信息、假设、机制与结论边界。','read-first-paper','用 Z08 定位正文'],
     ['留下能被检查的第一份结果','保存运行规则、完整过程、比较设置和失败记录。','first-reproduction','运行我的第一份代码'],
   ];
-  return `<section class="beginner-start"><div class="start-lead"><div><h1>多智能体研究，<br>从看懂一次协作开始。</h1><p class="guide-intro">先让四个数互相影响，再把它们变成模型、公式和可检查的问题。数学细节可以按需展开，学习路径也可以随时跳转。</p><button class="primary-button" data-lab="consensus">先动手看一个例子</button><p class="small-copy">默认面向学过一点高数、线代，但还没做过多智能体论文的读者。零基础也可以先看图和解释。</p></div><div class="starter-graph">${graphSVG()}<p>每个人只和相邻的人交换信息。<br>他们能一起走向同一个结果吗？</p></div></div>
-  <section class="guide-section"><h2>你可能正卡在这里</h2><div class="question-links">${link('math-bridge','公式里的矩阵到底在算什么？')}${link('formation-starter','一致性与编队有什么区别？')}${link('control-learning','一定要先学强化学习吗？')}${link('research-question','读完论文以后，下一步做什么？')}</div></section>
+  return `<section class="beginner-start"><div class="start-lead"><div><h1>多智能体研究，<br>从理解变化到检验问题。</h1><p class="guide-intro">先补运动、程序更新与反馈，再把协作现象写成模型和问题。每一轮都留下可以检查的材料，并据此决定下一步。</p><button class="primary-button" data-block="motion-basics">先补运动与反馈基础</button> <button class="secondary-button" data-study-view="research">已有基础，直接研究起步</button><p class="small-copy">基础三问从单位和两步手算讲起，不预设学过控制。方法区逐步使用高数和线代；需要时可回到数学桥梁。</p></div><div class="starter-graph">${graphSVG()}<p>每个人只和相邻的人交换信息。<br>他们能一起走向同一个结果吗？</p></div></div>
+  <section class="guide-section"><h2>先补这三个基础问题</h2><div class="question-links">${link('motion-basics','位置、速度、加速度怎样联系？')}${link('update-basics','程序怎样按步骤更新变量？')}${link('feedback-basics','根据当前状态调整动作，怎样形成反馈？')}</div><p>小产出：一张两步运动表、一段保留旧状态的程序、一个能解释增益影响的反馈例子。基础会了可以直接跳过。</p></section>
+  <section class="guide-section"><h2>你可能正卡在这里</h2><div class="question-links">${link('math-bridge','公式里的矩阵到底在算什么？')}${link('formation-starter','一致性与编队有什么区别？')}${link('control-learning','一定要先学强化学习吗？')}${link('research-loop','读完论文以后，怎样开始一轮研究？')}${link('literature-gap','怎样检索，才不在阅读上踏步？')}${link('failure-diagnosis','结果不好时，先查什么？')}</div></section>
   <section class="guide-section"><h2>一条可选的入门路径</h2><p>每一站都有一个小产出。你可以按顺序走，也可以从眼前的问题进入。</p><ol class="learning-path">${path.map(([title,outcome,id,label])=>`<li><div><h3>${title}</h3><p>${outcome}</p></div>${link(id,label)}</li>`).join('')}</ol></section>
   <section class="guide-section"><h2>同一个概念，可以换一种方式理解</h2><div class="learning-modes"><div><h3>先看变化</h3><p>调通信图、拖动时间、切换目标，观察哪个现象改变。</p>${labLink('consensus','打开四个交互例子')}</div><div><h3>再算一步</h3><p>从四个具体数字开始，逐项解释更新规则与矩阵。</p>${link('math-bridge','补齐这次需要的数学')}</div><div><h3>最后动手</h3><p>下载短代码，保存一个能检查的结果，填写自己的问题卡。</p><button class="term-link" data-study-view="research">进入研究起步</button></div></div></section>
   <section class="guide-section"><h2>把这些区别留在脑中</h2><p>多个 agent、分布式计算和多智能体强化学习并不是同一个意思；状态收敛、任务完成和全过程安全也要分别检查。每个基础区块末尾都有一题“想一想”，可以先自己回答，再展开解释。</p>${link('stability-language','分清收敛、稳定与安全')} · ${link('architectures','分清计算架构')} · ${link('information','分清真实状态与收到的信息')}</section></section>`;
@@ -64,8 +67,14 @@ const fieldSpecs=[
   ['stop','边界、预算与停止条件','案例范围、尝试次数；什么结果会否定当前解释或要求停止？'],
 ];
 function researchHTML() {
-  return `<section class="research-start"><button class="back-button" data-study-view="start">返回初学者入口</button><h1>从“想研究”到第一张可检查的问题卡</h1><p class="guide-intro">先让一个具体问题站得住，再决定需要哪些理论或工具。下面的路径是学习建议；例子没有经过新颖性检索，不替你选择研究方向。</p>
-  <section class="guide-section"><h2>四步走，每一步留下一个产出</h2><ol class="learning-path"><li><div><h3>看懂并跑通一个小模型</h3><p>产出：一个能手算的更新、完整轨迹和你能解释的反例。</p></div>${labLink('consensus','去交互区')}</li><li><div><h3>读一篇论文的问题与假设</h3><p>产出：模型／信息／约束／结论卡；不懂的符号逐个补。</p></div>${link('read-first-paper','照着 Z08 练习')}</li><li><div><h3>做有边界的复现与比较</h3><p>产出：运行记录、同条件基线、所有成本与失败。</p></div>${link('first-reproduction','查看复现清单')}</li><li><div><h3>追问一个机制，再查近邻文献</h3><p>产出：可证伪问题、已有方法对照表和下一步停止条件。</p></div>${link('research-question','把问题写具体')}</li></ol></section>
+  return `<section class="research-start"><button class="back-button" data-study-view="start">返回初学者入口</button><h1>从一个疑问，推进到一份证据</h1><p class="guide-intro">先写清这一轮要减少什么不确定性，再选择阅读、推导、反例或小规模验证。结束时留下材料和下一步判断。这里提供方法与教学练习，研究方向由你决定。</p>
+  ${actionsHTML()}
+  <section class="guide-section"><h2>按当前问题找做法</h2><div class="question-links">${link('research-loop','怎样开始一轮有效研究？')}${link('problem-contract','怎样把大方向缩成明确问题？')}${link('literature-gap','怎样核对最近邻与研究差距？')}${link('method-choice','怎样选择反馈、优化、触发或学习？')}${link('minimal-study','现在需要推导、反例还是小实验？')}${link('experiment-design','怎样设计能解释原因的比较？')}${link('failure-diagnosis','怎样定位失败而不盲目调参？')}${link('research-decision','什么时候继续、修改或停止？')}</div></section>
+  <section class="guide-section"><h2>先交付一份能核对的小结果</h2><p>下载只依赖 Python 标准库的教学脚本。先核对两步运动、同步更新、反馈限制与一个区间反例，再选择一个案例输出完整记录。无需安装控制工具箱。</p><p><a href="./examples/research_starter.py" download>下载基础与研究练习脚本 .py</a></p><pre><code>python research_starter.py --check
+python research_starter.py --case motion
+python research_starter.py --case feedback
+python research_starter.py --case consensus
+python research_starter.py --case invariant</code></pre><p>需要保留记录时，可在命令末尾加 <code>&gt; teaching-log.jsonl</code>，请自行选择新文件名避免覆盖。完成标准：能解释第一步，核对原状态与实际输入，并写一句当前例子不能推出什么。脚本是解析教学练习，不读取私人数据，不是论文复现。</p></section>
   <section class="guide-section"><h2>可以平行探索的几个入口</h2><div class="table-scroll"><table class="study-table"><caption>问题入口与第一份可检查的材料；不表示新颖性或优先级</caption><thead><tr><th>入口</th><th>先问什么</th><th>先留下什么</th></tr></thead><tbody><tr><th>协作与任务</th><td>共同目标怎样分到各 agent？谁承担成本？</td><td>任务、动作权限和个体成本定义</td></tr><tr><th>信息与通信</th><td>消息何时变旧，补发何时值得？</td><td>信息时间线与同条件通信／误差比较</td></tr><tr><th>约束与安全</th><td>输入受限时，可行选择何时消失？</td><td>约束、可行域、无解及备份处理</td></tr><tr><th>模型与学习</th><td>哪个决策需要数据适应，简单规则差在哪里？</td><td>可执行决策、强基线与未解决状态</td></tr></tbody></table></div></section>
   <section class="guide-section"><h2>填写我的第一张问题卡</h2><p>内容只留在当前页面内存中，不提交服务器，也不自动保存。刷新会清空；可下载为 Markdown 自己保管。不要把私人数据或未公开材料贴进公开 Issue。</p><div class="workbook-actions"><button id="workbook-example" class="secondary-button">填入通信练习示例</button><button id="workbook-clear" class="ref-link">清空问题卡</button></div><form id="research-workbook" class="workbook-fields">${fieldSpecs.map(([id,label,placeholder])=>`<label for="draft-${id}">${label}<textarea id="draft-${id}" data-draft-field="${id}" rows="3" maxlength="2000" placeholder="${placeholder}"></textarea></label>`).join('')}</form><p id="workbook-status" role="status">0 / 8 项已填写。这是问题草稿，不是创新性或研究资格评分。</p><details class="draft-preview"><summary>预览将下载的文字</summary><pre id="workbook-preview"></pre></details><div class="workbook-actions"><button id="workbook-download" class="primary-button">下载我的问题卡 .md</button><button id="workbook-copy" class="secondary-button">复制问题卡</button></div><p class="small-copy">练习示例仅使用本页四 agent 简化模型，展示如何描述问题，不提供新的科研结果。自行下载的文件保存在你选择的位置。</p></section>
   <section class="guide-section"><h2>下一篇论文，用这五问来读</h2><p>谁的什么误差？在什么模型与信息条件下？方法新增了什么可执行机制？与谁比较？哪些结果会让解释站不住？</p>${link('fair-comparison','查看比较与消融细节')} · ${link('control-learning','判断学习承担什么职责')} · ${link('stability-language','准确描述你观察到的性质')}</section></section>`;
@@ -91,7 +100,7 @@ function renderMath(root) {
 
 export function mountBeginner(root,view,lab) {
   renderMath(root);
-  if(view==='research')return mountWorkbook(root);
+  if(view==='research'){const stopWorkbook=mountWorkbook(root),stopActions=mountActions(root);return ()=>{stopWorkbook();stopActions();};}
   if(view!=='lab')return ()=>{};
   let k=0,timer=null,history,periodic,event;
   const $=s=>root.querySelector(s);
