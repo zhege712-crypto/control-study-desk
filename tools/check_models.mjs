@@ -1,6 +1,7 @@
 // Verify the actual teaching recurrences and their explanatory boundaries.
 import assert from 'node:assert/strict';
 import {createRequire} from 'node:module';
+import {readFileSync} from 'node:fs';
 import {consensusHistory,consensusStep,TOPOLOGIES,INITIAL,mean,spread,formationHistory,communicationHistory,safetyProjection} from '../docs/lab-models.js';
 import {beginnerHTML,guideFormulas} from '../docs/beginner.js';
 import {blocks} from '../docs/content.js';
@@ -34,5 +35,14 @@ for(const view of ['start','research','lab'])for(const lab of view==='lab'?['con
   for(const [,math]of html.matchAll(/data-math="([^"]+)"/g)){katex.renderToString(math,{throwOnError:true,strict:'error'});mathCount++;}
 }
 for(const formula of guideFormulas)katex.renderToString(formula,{throwOnError:true});
+let blockMathCount=0;
+const sourceMetadata=JSON.parse(readFileSync(new URL('../docs/papers.json',import.meta.url),'utf8'));
+for(const block of blocks) {
+  for(const ref of block.refs)assert(sourceMetadata.find(p=>p.id===ref.paper)?.read_pages.includes(ref.page));
+  for(const item of block.sections)for(const [,encoded]of item.html.matchAll(/data-math="([^"]+)"/g)) {
+    katex.renderToString(encoded.replaceAll('&lt;','<').replaceAll('&gt;','>').replaceAll('&amp;','&'),{throwOnError:true,strict:'error'});
+    blockMathCount++;
+  }
+}
 assert.equal(beginnerBlocks.length,12);
 console.log('Teaching-model, formula and guide-link checks passed');

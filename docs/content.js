@@ -1,6 +1,7 @@
 // Chinese teaching copy is explicitly requested; source notation is retained in each reference.
 import { additionalBlocks } from './terms-expanded.js';
 import { beginnerBlocks } from './beginner-content.js';
+import { deepenBlocks } from './depth-content.js';
 export const groups = [
   { id: 'all', name: '全部区块', description: '从一个问题进入，沿着联系继续。' },
   { id: 'starter', name: '入门与研究', description: '从具体例子认识多智能体，再把想法写成可检查的问题。' },
@@ -12,7 +13,7 @@ export const groups = [
 ];
 
 const ref = (paper, page, label) => ({ paper, page, label });
-export const blocks = [
+export const blocks = deepenBlocks([
   {
     id: 'model', group: 'model', title: '模型里的状态和输入，究竟是什么？', term: 'State · Input · Dynamics',
     intro: '同一个字母 u，可能指直接施加的加速度，也可能指还要经过执行器的命令。先看接口，再看算法。',
@@ -215,4 +216,4 @@ export const blocks = [
   },
   ...additionalBlocks,
   ...beginnerBlocks,
-];
+]);
