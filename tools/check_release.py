@@ -18,7 +18,7 @@ for p in ROOT.rglob('*'):
         continue
     assert p.suffix.lower() != '.pdf', f'PDF cannot be published: {p.name}'
     assert p.name not in {'sources.json','HANDOFF.md','MODEL_HANDOFF.md'}, f'Private artifact: {p.name}'
-    if p.suffix in {'.js','.mjs','.json','.html','.md','.yml','.py'} and p.name != 'check_release.py':
+    if p.suffix in {'.js','.mjs','.json','.html','.md','.yml','.py','.bib'} and p.name != 'check_release.py':
         text = p.read_text(encoding='utf-8')
         if 'vendor' in p.parts:
             text = text.replace('/home/web_user', '[upstream virtual filesystem]')

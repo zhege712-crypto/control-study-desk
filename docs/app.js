@@ -1,5 +1,6 @@
 import { groups, blocks } from './content.js';
 import { beginnerHTML, mountBeginner, labNames } from './beginner.js';
+import {historyHTML,mountHistory,historyRoutes} from './history.js';
 
 const $ = selector => document.querySelector(selector);
 const esc = value => String(value).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
@@ -16,8 +17,9 @@ const IS_PUBLIC = document.documentElement.dataset.edition === 'public';
 const asset = path => new URL(path, import.meta.url).href;
 const localFiles = new Map();
 const localUrls = new Map();
-const defaultState = {view:'start',group:'all',block:null,q:'',paper:'V01',page:5,context:'recursive',lab:'consensus'};
-const guideViews = new Set(['start','lab','research']);
+const defaultState = {view:'start',group:'all',block:null,q:'',paper:'V01',page:5,context:'recursive',lab:'consensus',chapter:'overview'};
+const guideViews = new Set(['start','lab','research','history']);
+let historySources=[];
 let cleanupBeginner = ()=>{};
 let state = {...defaultState};
 let papers = [], paperById;
@@ -41,6 +43,7 @@ function locationForState() {
   if (state.view === 'library') p.set('view','papers');
   if (guideViews.has(state.view)) p.set('view',state.view);
   if (state.view==='lab') p.set('lab',state.lab);
+  if (state.view==='history') p.set('chapter',state.chapter);
   if (state.group !== 'all') p.set('group',state.group);
   p.set('paper',state.paper); p.set('page',state.page);
   return '#'+p.toString();
@@ -56,6 +59,7 @@ function applyLocation() {
   if (p.get('view')==='papers') state.view='library';
   if (groupById.has(p.get('group'))) {state.group=p.get('group');if(!state.block&&!p.has('view'))state.view='overview';}
   if (guideViews.has(p.get('view'))) state.view=p.get('view');
+  if(historyRoutes.includes(p.get('chapter')))state.chapter=p.get('chapter');
   if (Object.hasOwn(labNames,p.get('lab'))) state.lab=p.get('lab');
   if (paperById.has(p.get('paper'))) state.paper=p.get('paper');
   const page = Number(p.get('page'));
@@ -73,7 +77,7 @@ function sourcePill(reference) {
 }
 function renderNavigation() {
   $('#block-count').textContent=`学习内容 · ${blocks.length} 个区块`;
-  $('#group-nav').innerHTML=[['start','初学者入口'],['lab','交互理解'],['research','研究起步']].map(([id,name])=>`<button class="group-button ${state.view===id?'active':''}" data-study-view="${id}" ${state.view===id?'aria-current="page"':''}><span>${name}</span></button>`).join('')+groups.map(g => `<button class="group-button ${!guideViews.has(state.view)&&state.view!=='library'&&state.group===g.id?'active':''}" data-group="${g.id}" ${!guideViews.has(state.view)&&state.view!=='library'&&state.group===g.id?'aria-current="page"':''}><span>${g.name}</span><small>${g.id==='all'?blocks.length:blocks.filter(b=>b.group===g.id).length}</small></button>`).join('');
+  $('#group-nav').innerHTML=[['start','初学者入口'],['history','发展历程与关联'],['lab','交互理解'],['research','研究起步']].map(([id,name])=>`<button class="group-button ${state.view===id?'active':''}" data-study-view="${id}" ${state.view===id?'aria-current="page"':''}><span>${name}</span></button>`).join('')+groups.map(g => `<button class="group-button ${!guideViews.has(state.view)&&state.view!=='library'&&state.group===g.id?'active':''}" data-group="${g.id}" ${!guideViews.has(state.view)&&state.view!=='library'&&state.group===g.id?'aria-current="page"':''}><span>${g.name}</span><small>${g.id==='all'?blocks.length:blocks.filter(b=>b.group===g.id).length}</small></button>`).join('');
   $('#library-button').setAttribute('aria-pressed',String(state.view==='library'));
 }
 function renderOverview() {
@@ -134,10 +138,11 @@ function renderMain(reset=true,moveFocus=false) {
   if(guided)$('#workspace').classList.remove('reader-mobile-open');
   $('#reader-toggle').hidden=guided;
   renderNavigation();
-  if(guided){$('#main-content').innerHTML=beginnerHTML(state.view,state.lab);cleanupBeginner=mountBeginner($('#main-content'),state.view,state.lab);}
+  if(state.view==='history'){$('#main-content').innerHTML=historyHTML(state.chapter,historySources);cleanupBeginner=mountHistory($('#main-content'),state.chapter);}
+  else if(guided){$('#main-content').innerHTML=beginnerHTML(state.view,state.lab);cleanupBeginner=mountBeginner($('#main-content'),state.view,state.lab);}
   else if (state.view==='detail') renderDetail();else if(state.view==='library')renderLibrary();else renderOverview();
   if (reset) $('#main').scrollTop=0;
-  document.title=(state.view==='detail'?blockById.get(state.block)?.title:state.view==='library'?'关联论文':state.view==='start'?'多智能体入门':state.view==='lab'?'交互理解':state.view==='research'?'研究起步':'从一个问题开始')+' · 论文学习台';
+  document.title=(state.view==='history'?'控制理论发展与知识关联':state.view==='detail'?blockById.get(state.block)?.title:state.view==='library'?'关联论文':state.view==='start'?'多智能体入门':state.view==='lab'?'交互理解':state.view==='research'?'研究起步':'从一个问题开始')+' · 论文学习台';
   if (moveFocus) $('#main').focus({preventScroll:true});
 }
 function selectBlock(id,{keepSource=false}={}) {
@@ -248,6 +253,7 @@ function navigateOverview() {state.view='overview';state.block=null;state.q='';$
 async function init() {
   try {
     const response=await fetch(asset('papers.json'));if(!response.ok)throw new Error('Missing papers.json');papers=await response.json();
+    const historyResponse=await fetch(asset('history-sources.json'));if(!historyResponse.ok)throw new Error('Missing history-sources.json');historySources=await historyResponse.json();
     paperById=new Map(papers.map(p=>[p.id,p]));
     if(location.hash)applyLocation();else{
       try {
@@ -257,7 +263,7 @@ async function init() {
           state.context=blockById.has(saved.context)?saved.context:null;
           if(blockById.has(saved.block)&&saved.view==='detail'){state.block=saved.block;state.context=saved.block;state.view='detail';}
           if(groupById.has(saved.group))state.group=saved.group;
-          if(guideViews.has(saved.view)){state.view=saved.view;state.lab=Object.hasOwn(labNames,saved.lab)?saved.lab:'consensus';}
+          if(guideViews.has(saved.view)){state.view=saved.view;state.lab=Object.hasOwn(labNames,saved.lab)?saved.lab:'consensus';state.chapter=historyRoutes.includes(saved.chapter)?saved.chapter:'overview';}
         }
       }catch{/* A malformed saved position should not prevent startup. */}
     }
@@ -287,6 +293,7 @@ async function init() {
     renderMain();updateReaderToggle();showSource();
     document.addEventListener('click',async event=>{
       const el=event.target.closest('button,a');if(!el)return;
+      if(el.dataset.historyChapter&&historyRoutes.includes(el.dataset.historyChapter)){state.view='history';state.chapter=el.dataset.historyChapter;state.block=null;state.group='all';state.q='';$('#search').value='';renderMain(true,true);updateLocation(true);return;}
       if(el.dataset.studyView||el.dataset.lab){
         state.view=el.dataset.lab?'lab':el.dataset.studyView;
         if(el.dataset.lab&&Object.hasOwn(labNames,el.dataset.lab))state.lab=el.dataset.lab;

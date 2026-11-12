@@ -37,6 +37,10 @@ jobs:
         run: python3 docs/examples/consensus_demo.py
       - name: Check foundation and research starter fixtures
         run: python3 docs/examples/research_starter.py --check
+      - name: Check history citations, concept relations and delayed feedback
+        env:
+          HISTORY_PYTHON: python3
+        run: node tools/check_history.mjs
       - uses: actions/configure-pages@v5
       - uses: actions/upload-pages-artifact@v3
         with:
