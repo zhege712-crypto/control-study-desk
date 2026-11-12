@@ -1,0 +1,21 @@
+# 论文学习台 / Control Study Desk
+
+中文解释、英文术语与文献出处相连的静态学习网站。27 个独立知识区块，包含 CBF、CLF、QP、MPC、PE、Hankel、Laplacian、Zeno/MIET 等概念。
+
+在线阅读：https://zhege712-crypto.github.io/control-study-desk/
+
+## 论文来源、版权和隐私
+
+完整说明及五篇参考文献的作者、刊物、正式年份、DOI、选读版本和页码见 [来源与隐私说明](docs/about.html)。本仓库不分发论文 PDF 或原始图表，不包含本机绝对路径和私人研究记录。标注出处不等于取得再分发许可。
+
+可点击 DOI 出版入口合法取得全文，或选择自己的本地 PDF，在浏览器内对照阅读。文件仅在当前页面内存中解析，不上传；刷新即清除选择。仅阅读位置保存在浏览器 localStorage；无账号、广告、统计脚本或运行时 CDN。GitHub Pages 自身的请求日志由 GitHub 管理。部分中文讲解和代码由 AI 辅助编写，请以论文为准核对。
+
+## 部署与本地查看
+
+GitHub Actions 从 main 分支打包 docs 目录并部署到 Pages，无需另设密钥。构建时下载固定版本的 PDF.js 和 KaTeX，核对 SHA-256 后随站分发；浏览时不依赖第三方 CDN。源码仓库忽略生成的 docs/vendor/。克隆后先运行 `python tools/prepare_vendor.py`，再运行 `python tools/preview.py`，访问 `http://127.0.0.1:8000/`。不要直接以 file:// 打开。
+
+## 文件与许可
+
+docs/content.js 和 docs/terms-expanded.js 保存教学内容；docs/papers.json 仅含公开文献元数据；docs/app.js 提供搜索、关联导航和本地 PDF 阅读。PDF.js 4.10.38 与 KaTeX 0.16.22 本地随包分发，许可证文件保留。自有代码与教学文字暂未授予额外开放再许可；不对第三方论文主张许可。
+
+更正与反馈请使用仓库 Issue；请勿公开论文全文、个人信息、凭据或私密研究记录。
