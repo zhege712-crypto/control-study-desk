@@ -1,0 +1,148 @@
+// User-requested Chinese teaching material. References are backgrounds, not blanket proofs.
+const ref = (paper,page,label)=>({paper,page,label});
+export const beginnerBlocks = [
+  {
+    id:'mas-basics',group:'starter',title:'多智能体研究的对象，是很多机器人吗？',term:'Multi-Agent System (MAS) · Agent · Interaction',
+    intro:'数量只是起点。更关键的是：多个决策者如何通过信息、动力学或共同资源相互影响。',
+    tags:['初学者','MAS','多智能体','入门','agent','研究对象'],related:['information','architectures','consensus-starter','model'],
+    refs:[ref('Z08',2,'§II / Agents, graph and objective'),ref('Z11',2,'Platoon decision formulation')],
+    sections:[
+      {title:'先用四辆车拆成四个角色',kind:'教学解释',html:'<p>可以把每辆车看作一个 agent：它有速度等状态，接收本车传感器或邻车消息，选择加速或减速，并受到自身执行器限制。前车减速会改变后车间距；消息是否到达会改变后车能依据什么决策。研究对象因此包括“车”和“车之间的关系”。</p><p>这里是概念例子，不采用工作区中的任何实际车辆实验数据。agent 也可以是无人机、机械臂、传感器节点或软件决策者。</p>'},
+      {title:'一张最小问题清单',kind:'入手方法',html:'<ul><li>谁在行动：有几个 agent，各自是什么系统？</li><li>各自能做什么：输入是力、加速度、消息，还是高层任务选择？</li><li>各自知道什么：本地测量、邻居信息，还是全局状态？</li><li>为什么要合作：共同到达、一致估计、保持队形、减少资源消耗？</li><li>什么绝不能发生：碰撞、失联、输入越限，或任务失败？</li></ul><p>先把这些填清，比先决定使用某个算法更容易得到一个可分析的问题。</p>'},
+      {title:'三种相互影响，可能同时出现',kind:'概念区分',html:'<p><strong>信息耦合：</strong>我需要邻居的测量。<strong>物理耦合：</strong>邻居的动作改变我的间距或受力。<strong>目标／约束耦合：</strong>我们共享总带宽、任务分配或碰撞约束。只有通信连线的图，不一定完整表达了物理影响。</p><p>Z08 把智能体、通信图和同步目标分别定义；Z11 则在车队重排任务中定义状态和排列决策。两者的 agent 和动作层次不同。</p>'},
+      {title:'自测：四台独立温控器就是协同控制吗？',kind:'想一想与参考答案',optional:true,html:'<p>如果互不交换信息、互不影响，也没有共同约束，只是四个独立控制问题。若共享总用电上限，或房间热交换会影响其他房间，就出现需要共同建模的关系。是否值得使用多智能体方法，还要看这种关系是否重要。</p>'},
+    ],
+  },
+  {
+    id:'math-bridge',group:'starter',title:'数学要先补到哪里，才能看懂第一条控制律？',term:'Vector · Matrix · Derivative · Eigenvalue',
+    intro:'先掌握能解释一个小例子的数学，再按论文需要补充；不必把所有理论学完才能开始。',
+    tags:['数学基础','向量','矩阵','导数','特征值','线性代数','高数','初学者'],related:['consensus-starter','laplacian','lie-derivative','model'],
+    refs:[ref('Z08',2,'§II-A / Laplacian and agent dynamics'),ref('R02',3,'§2.1 / State-space representation')],
+    sections:[
+      {title:'从一维数值，到向量',kind:'基础补充',html:String.raw`<p>先令四个 agent 的状态各是一个数，整体状态就是：</p><div class="math" data-math="x=[x_1,x_2,x_3,x_4]^\top"></div><p>下标 i 表示“谁”；xᵢ(k) 中的 k 表示“第几次更新”。x 的维数是 4，不是说每个 agent 都有四个状态。若每辆车各有位置和速度，四辆车的整体状态才会有 8 个分量。</p>`},
+      {title:'矩阵乘法其实在逐行加权',kind:'教学推导',html:String.raw`<p>链式通信中，第二个 agent 有两个邻居。对应的一行拉普拉斯矩阵给出：</p><div class="math" data-math="(Lx)_2=-x_1+2x_2-x_3=(x_2-x_1)+(x_2-x_3)"></div><p>因此 −Lx 的第 2 个分量就是“把自己与两个邻居的差往回拉”。先手算这一行，再看整体矩阵，会更容易。</p>`},
+      {title:'导数和差分分别问什么',kind:'基础补充',html:String.raw`<p><span class="math-inline" data-math="\dot x_i(t)"></span> 是连续时间变化率；<span class="math-inline" data-math="x_i(k+1)-x_i(k)"></span> 是相邻更新的变化量。二者单位与时间刻度不同。连续控制律换成离散更新以后，步长会影响稳定性。</p><p>再往后，需要用特征值解释哪些方向在衰减，用范数表达误差大小，用量词区分“每个状态”和“存在一个输入”。这些都可以在本页关联术语中按需补充。</p>`},
+      {title:'自测：把邻居差异乘以 100，会更快吗？',kind:'想一想与参考答案',optional:true,html:'<p>在离散更新里可能产生越过目标、反复放大的振荡，甚至发散。连续时间的正增益结论不能直接替代离散步长条件。去交互区切换“过大步长”，观察环形图的误差。</p><p><button class="term-link" data-lab="consensus">打开一致性交互例子</button></p>'},
+    ],
+  },
+  {
+    id:'consensus-starter',group:'starter',title:'一致性：每个人只看邻居，为什么能逐渐达成一致？',term:'Consensus · Average Consensus · 一致性',
+    intro:'先跟着四个数做一轮更新，再理解“局部差异如何变成整体变化”。',
+    tags:['一致性','average consensus','初学者','平均值','控制律'],related:['graph','laplacian','math-bridge','formation-starter','stability-language'],
+    refs:[ref('Z08',2,'§II-B / Synchronization objective; background only')],
+    sections:[
+      {title:'先算第二个人会怎么做',kind:'教学示例',html:String.raw`<p>初值取 [10,30,70,90]，按 1—2—3—4 连成链。每人把状态向邻居方向移动一小步：</p><div class="math" data-math="x_i(k+1)=x_i(k)+\varepsilon\sum_{j\in\mathcal N_i}(x_j(k)-x_i(k))"></div><p>ε=0.2 时，第 2 个 agent 从 30 更新到 30+0.2[(10−30)+(70−30)]=34。四人必须基于同一轮旧状态同时算，不能让后算的人偷用已经更新的新值。</p><p><button class="term-link" data-lab="consensus">逐步播放四个人的变化</button></p>`},
+      {title:'平均值为什么保留下来',kind:'教学推导',html:String.raw`<p>在这里的固定无向图、对称权重、无扰动同步更新下，每条边一端增加多少，另一端就减少多少：</p><div class="math" data-math="\sum_i x_i(k+1)=\sum_i x_i(k),\qquad\bar x=50"></div><p>守住平均值并不等于已经收敛。还要让不同 agent 之间的差逐渐消失。固定连通无向图中，条件 <span class="math-inline" data-math="0<\varepsilon<2/\lambda_{\max}(L)"></span> 使分歧方向衰减，得到这个无约束理想模型的平均一致性。</p>`},
+      {title:'断开一条关键连接会怎样',kind:'反例与边界',html:'<p>把链中间的 2—3 边断开，就变成两个互不交换信息的小组。它们各自趋向 20 和 80，而不是一起趋向 50；整体平均仍然是 50。观察到“总平均不变”无法替代检查各节点的分歧。</p><p>这是网页采用的基础离散教学模型。Z08 研究的是更一般的连续 LTI 智能体、估计器及自适应边触发律，不能把网页的简单更新称为 Z08 复现。</p>'},
+      {title:'自测：一致后一定到了正确目标吗？',kind:'想一想与参考答案',optional:true,html:'<p>不一定。这条规则没有指定外部目标，只保留了初值平均。若任务是追踪某个领航者或预设参考值，需要增加相应的信息和控制设计。</p>'},
+    ],
+  },
+  {
+    id:'formation-starter',group:'starter',title:'一致性、编队、跟踪和避碰，分别在要求什么？',term:'Formation · Tracking · Collision Avoidance',
+    intro:'同样是多个点一起动，目标可能完全不同。先把“成功”写成可以检查的关系。',
+    tags:['编队','formation','跟踪','tracking','避碰','间距','初学者'],related:['consensus-starter','safe-set','invariance','mas-basics'],
+    refs:[ref('Z08',2,'Eq. (2) / State agreement'),ref('R01',5,'Safety Versus Stability')],
+    sections:[
+      {title:'四种要求，分开写',kind:'教学区分',html:String.raw`<p><strong>一致性：</strong>状态差趋于零。<strong>编队：</strong>相对位置趋向指定偏移。<strong>跟踪：</strong>状态接近随时间变化的参考。<strong>避碰：</strong>整个过程中不违反规定的距离或占用约束。</p><div class="math" data-math="\begin{aligned}\text{consensus: }&x_i-x_j\to0\\\text{formation: }&p_i-p_j\to r_i-r_j\end{aligned}"></div><p>rᵢ 是给 agent i 的队形偏移。状态一致不等于位置要重合；位置重合也不能直接当作物理机器人合理的目标。</p>`},
+      {title:'换一个变量，就能看到队形结构',kind:'教学推导',html:String.raw`<p>在本网页理想位置直接更新例子中，令：</p><div class="math" data-math="z_i=p_i-r_i"></div><p>若各 zᵢ 达成一致，pᵢ 便保留各自 rᵢ 的偏移，形成平移后的队形。这个构造说明目标变量选择的重要性；它不包含实际车辆的加速度、转向、碰撞约束或输入限制。</p><p><button class="term-link" data-lab="formation">对照“同一点”和“保留队形”</button></p>`},
+      {title:'末端排好了，不等于中途安全',kind:'适用边界',html:'<p>两个机器人即使最后站在正确位置，中间也可能相撞。R01 区分安全与稳定；若做真实编队，还需要检查整个运动过程的避碰、执行器限制、感知误差，以及任务是否在要求时间内完成。</p>'},
+      {title:'自测：速度一致会导致所有车挤到一起吗？',kind:'想一想与参考答案',optional:true,html:'<p>速度差趋于零不表示位置相同。间距会取决于此前运动和额外控制。要保持指定车距，需要明确间距误差，而不能只检查车速一致。</p>'},
+    ],
+  },
+  {
+    id:'information',group:'starter',title:'画了通信边之后，每个人到底拿到了什么？',term:'Local Information · Observation · Causal Policy',
+    intro:'把“看见”“收到”和“真实存在”分开，是从动画走向可实现控制的重要一步。',
+    tags:['局部信息','观测','通信','信息结构','causal','初学者'],related:['graph','trigger','rl-state','architectures'],
+    refs:[ref('Z08',2,'Eq. (3) / Relative-state estimator'),ref('Z08',3,'Remarks 2–3'),ref('R01',4,'Information state / Partial knowledge')],
+    sections:[
+      {title:'给 agent 写一张信息收据',kind:'入手方法',html:'<p>例如在时刻 k，车 2 知道自己的速度、到前车的测量距离，以及上次收到的前车消息。它通常不知道前车下一时刻真正采取的动作，也不能使用未来才收到的数据。记录消息时间戳，比笼统写“已知邻居状态”更具体。</p>'},
+      {title:'真实状态与最近一次消息不同',kind:'教学解释',html:String.raw`<p>若最近一次广播在 kᵢ，则保持的消息可写为：</p><div class="math" data-math="\hat x_i(k)=x_i(k_i),\qquad k_i\le k"></div><p>xᵢ(k) 是现在的状态；x̂ᵢ(k) 是旧消息。两者差值会影响依赖消息的控制。网页通信例子使用简单的“保持”；Z08 则用模型传播相对状态估计，并非同一算法。</p><p><button class="term-link" data-lab="communication">拖动阈值，比较消息与真实状态</button></p>`},
+      {title:'观察者能看见，不代表控制器能用',kind:'研究习惯',html:'<p>仿真器可能能读取所有真实状态，用它们画图或离线评价是一个角色；把这些量直接送进一个声称“局部信息”的策略，是另一个角色。应把控制器输入与评价器输入分开记录，再核对论文声称的信息条件。</p>'},
+      {title:'自测：零通信是不是完全不计算？',kind:'想一想与参考答案',optional:true,html:'<p>不是。agent 仍可能需要采样、本地估计、计算控制和检测触发条件。Z08 明确讨论用本地计算换取通信；少发消息不自动等于总成本更低。</p>'},
+    ],
+  },
+  {
+    id:'architectures',group:'starter',title:'集中式、分散式、分布式，差别在哪里？',term:'Centralized · Decentralized · Distributed',
+    intro:'从“谁收集信息、谁计算决策、谁执行动作”三件事看结构，会比只记中文名称清楚。',
+    tags:['集中式','centralized','分布式','distributed','分散式','decentralized','架构'],related:['information','mas-basics','mpc','graph'],
+    refs:[ref('Z08',2,'Distributed local controller / Eq. (5)'),ref('Z11',2,'Joint permutation decision background')],
+    sections:[
+      {title:'先按决策过程来比较',kind:'术语教学补充',html:'<p><strong>集中式：</strong>某处汇总所需信息，统一求出联合决策。<strong>分布式：</strong>多个决策模块利用局部信息和通信协作计算。<strong>分散式：</strong>常指各模块主要依据自身可用信息分别决策；不同领域对 decentralized 与 distributed 的用法可能重叠，应以作者定义为准。</p><p>这里是术语比较，不把两篇背景文献当作统一词典。</p>'},
+      {title:'执行分开，不代表计算分开',kind:'教学示例',html:'<p>一台电脑收集四辆车状态，算出四个动作再发送给四辆车：执行器有四个，决策计算仍然集中。四个控制器各依据自己的量和邻居消息计算，又可能共同依赖离线算好的全局增益；“分布式执行”和“完全分布式设计”也需要分开。</p>'},
+      {title:'第一张结构图应画哪些箭头',kind:'入手方法',html:'<p>分别标出：测量箭头、通信箭头、计算模块和动作箭头。写清通信周期与丢包假设、每个模块拿到的量，以及共用哪些参数。暂时不用画复杂神经网络，也能发现中心节点是否是必要条件。</p>'},
+      {title:'自测：分布式一定更好或更安全吗？',kind:'想一想与参考答案',optional:true,html:'<p>不一定。它可能减少中心依赖，也可能增加通信、协调和证明难度。比较需要同样的任务、模型、信息与资源条件，而不是单凭架构名称。</p>'},
+    ],
+  },
+  {
+    id:'control-learning',group:'starter',title:'多智能体控制和多智能体强化学习，要怎样接起来看？',term:'Multi-Agent Control · MARL · Policy · Model',
+    intro:'先确定要做哪一种决策，再判断模型、优化或学习能承担什么职责。',
+    tags:['MARL','强化学习','多智能体控制','策略','学习必要性','初学者'],related:['rl-state','reward','filter','architectures'],
+    refs:[ref('Z11',2,'State/action and objective'),ref('Z08',2,'Model-based feedback law'),ref('R01',7,'Task policy and safety filtering')],
+    sections:[
+      {title:'几种方法可以承担不同工作',kind:'教学比较',html:'<p>反馈控制律可以直接把误差变成动作；MPC 依据模型预测并求解约束优化；强化学习通过交互数据调整策略。多 agent 并不自动意味着需要 MARL，使用学习也不等于放弃动力学模型或安全机制。</p>'},
+      {title:'训练时和执行时的信息可能不同',kind:'基础补充',html:'<p>MARL 文献中常见 CTDE（Centralized Training, Decentralized Execution，集中训练、分散执行）：训练阶段可使用更丰富的信息，部署策略只接收规定的本地观测。应分别列出 actor 与训练评价模块的输入，再检查执行阶段有没有使用未授权的全局量。这是通用术语补充，所列 Z11 状态与动作并不单独证明它采用 CTDE 或 MARL。</p>'},
+      {title:'Z11 可以帮助认识“决策层次”',kind:'原文联系',html:'<p>Z11 的重排决策把车辆排列作为动作，状态包含 SOC 等路线级信息。排列选择与连续时间加减速、换道轨迹是不同问题。读学习论文时，先指出策略实际控制的是哪一层，再讨论它在物理执行中的作用。</p>'},
+      {title:'自测：奖励里罚碰撞，是否已经保证不碰撞？',kind:'想一想与参考答案',optional:true,html:'<p>有限惩罚可能被其他收益抵消，探索也可能违规。应另查可行动作集合、运行时过滤及其假设。去<button class="term-link" data-block="reward">目标与约束区块</button>看一个可手算的反例。</p><p>研究上应说明：学习在利用哪种难以由基线处理的结构；如果一个简单规则在同样信息和预算下已经足够，新的学习方法需要回答它新增了什么价值。</p>'},
+    ],
+  },
+  {
+    id:'stability-language',group:'starter',title:'收敛、稳定、有限时间和安全，怎样避免看混？',term:'Convergence · Stability · Finite-Time · Safety',
+    intro:'一张曲线可能支持一种性质，却无法回答另一个问题；先明确需要检查的对象。',
+    tags:['稳定性','收敛','渐近','有限时间','安全','初学者','误差'],related:['clf','cbf','consensus-starter','formation-starter'],
+    refs:[ref('Z08',2,'Asymptotic synchronization objective'),ref('R01',5,'Safety Versus Stability')],
+    sections:[
+      {title:'先认识三个不同的问题',kind:'教学区分',html:'<p><strong>收敛：</strong>误差是否趋向目标，例如长期趋于零。<strong>稳定：</strong>起点发生小扰动时，轨迹能否一直保持在相应小范围内。<strong>安全：</strong>是否始终满足声明的约束。常说的“渐近稳定”把稳定性和吸引性结合，不能仅由曲线最终变小判断。</p>'},
+      {title:'指数衰减也通常不会在有限步精确归零',kind:'教学示例',html:String.raw`<div class="math" data-math="e_k=0.8^k e_0"></div><p>若 e₀≠0，那么任意有限 k 都仍有 eₖ≠0，但误差越来越小。实际任务可定义“误差小于 0.1 并持续若干步”的完成条件；那是一个操作性阈值，不应改称有限时间精确收敛定理。</p>`},
+      {title:'看一张误差图时补上单位和定义',kind:'入手方法',html:String.raw`<p>本页一致性交互区同时给出跨度和均方根分歧：</p><div class="math" data-math="\Delta_k=\max_i x_i(k)-\min_i x_i(k),\quad E_k=\sqrt{\tfrac14\sum_{i=1}^4(x_i(k)-\bar x(k))^2}"></div><p>它们在四个标量状态上有明确含义。如果换成位置和速度混合的向量，要先考虑量纲和权重，不能直接把不同单位相加。</p>`},
+      {title:'自测：最后十秒没碰撞，能证明始终安全吗？',kind:'想一想与参考答案',optional:true,html:'<p>需要检查完整时域；如果有连续运动，还要处理采样点之间的情况。某次有限测试无违规是经验记录，覆盖所有允许扰动与初始条件的保证则需要对应论证。</p>'},
+    ],
+  },
+  {
+    id:'read-first-paper',group:'starter',title:'第一篇论文怎么读，才不会从第一页卡住？',term:'Problem · Assumptions · Mechanism · Evidence',
+    intro:'每次阅读产出一张能复述的问题卡，遇到不懂的公式再回到相关基础。',
+    tags:['论文阅读','读论文','初学者','假设','贡献','文献笔记'],related:['mas-basics','information','trigger','research-question'],
+    refs:[ref('Z08',2,'§II / Problem and estimator'),ref('Z08',3,'Eq. (11) / Remarks 2–3')],
+    sections:[
+      {title:'第一次先找五个位置',kind:'阅读方法',html:'<ul><li>问题：系统是什么，希望哪种误差怎样变化？</li><li>假设：图是否连通？动力学是否已知？信息何时到达？</li><li>机制：控制器每次实际计算什么？</li><li>结论：定理还是有限案例，针对哪些性质？</li><li>边界：哪些情形没有覆盖，作者明确说明了什么？</li></ul><p>摘要帮助定位，定义与问题陈述确定对象；图表展示现象；证明说明结论怎样在条件下成立。它们可以来回读，不必强迫自己一次线性读完。</p>'},
+      {title:'用 Z08 做一次有边界的定位',kind:'原文联系',html:'<p>文件第 2 页：§II 给出无向连通图、LTI agent 及渐近同步目标；Eq. (3) 给出事件之间的相对状态估计。第 3 页：Eq. (11) 说明事件时刻如何由 sleeping time 和两端条件决定；Remarks 2–3 解释本地检测与计算／通信交换。</p><p>这足以整理问题和机制的入口；若要自己声称理解同步与 MIET 的完整保证，还需要继续检查后面的定理条件和证明。本区块没有代做这一步。</p>'},
+      {title:'不懂公式时，先给符号安排角色',kind:'入手方法',html:'<p>对每个符号写：维数、物理或算法意义、在哪里计算、是否实测、是否能在线使用、初值与更新时机。先手算一个 agent 的一次更新，往往比同时记住整页推导有效。</p><p>可以在<button class="term-link" data-study-view="research">研究起步页</button>填写并下载一张自己的问题卡。</p>'},
+      {title:'自测：论文没有考虑某个因素，算创新点吗？',kind:'想一想与参考答案',optional:true,html:'<p>只能先记成候选问题。还需查找其他文献是否已处理、说明该因素为什么改变原结论，并提出可检验的方法与比较。单纯在一篇论文中没看到，不足以建立新颖性。</p>'},
+    ],
+  },
+  {
+    id:'first-reproduction',group:'starter',title:'第一次复现，最小要做出什么？',term:'Reproduction · Baseline · Sanity Check',
+    intro:'先让一个固定案例、一个明确指标和一条更新规则能对得上，再逐步扩大范围。',
+    tags:['复现','代码','baseline','基线','最小实验','可重复','初学者'],related:['consensus-starter','read-first-paper','fair-comparison','research-question'],
+    refs:[ref('Z08',2,'Dynamics and objective as items to extract'),ref('R02',4,'Algorithm 1 / Explicit update sequence')],
+    sections:[
+      {title:'先区分练习与论文复现',kind:'入手方法',html:'<p>下载本页四 agent 代码并重现“连通时接近 50、断开时分成 20 和 80”，叫教学练习。只有当动力学、控制律、图、参数、初值、数值方法及评价与目标论文对应，并记录差异时，才开始讨论论文复现的忠实度。</p><p><a href="./examples/consensus_demo.py" download>下载不依赖第三方库的 Python 练习</a>，保存后运行 <code>python consensus_demo.py</code>。建议 Python 3.9 或更新版本；输出是四个状态、平均值、跨度及教学检查。</p>'},
+      {title:'保存这七项，才方便查错',kind:'可复用清单',html:'<p>保存模型和输入接口、信息结构、控制器及参数、初始条件和扰动、采样／数值方法、完整轨迹与指标定义、代码版本及运行命令。随机方法还要保存种子和训练／评价划分。别只留一张最好的曲线。</p>'},
+      {title:'优先检查会改变行为的错误',kind:'教学示例',html:'<p>同步更新误写成逐个原地更新，会让后面的 agent 用到本轮新状态；把位置误差写成速度误差，会改变优化对象；把控制命令当成实际加速度，会忽略执行器。先用可手算的一步和保持量检查程序，再追求图像相似。</p>'},
+      {title:'自测：运行没有报错，算复现成功吗？',kind:'想一想与参考答案',optional:true,html:'<p>还需要检查数据与结论是否匹配。实现运行成功、数值案例一致、理论结论独立核验、物理实验可用，是不同层次的证据。可以明确交付“复现了某个图的指定案例”，而不是笼统宣布复现整篇。</p>'},
+    ],
+  },
+  {
+    id:'fair-comparison',group:'starter',title:'怎样比较两种方法，才知道改善从哪里来？',term:'Matched Comparison · Ablation · Metrics',
+    intro:'先让双方解决同一个问题，再检查好处是否来自额外信息、更多资源或改变了评价方式。',
+    tags:['比较','消融','ablation','指标','公平基线','通信代价','初学者'],related:['information','reward','first-reproduction','research-question'],
+    refs:[ref('Z08',3,'Remark 3 / Computation and communication roles'),ref('R01',5,'Safety and task performance distinction')],
+    sections:[
+      {title:'比较前先把条件对齐',kind:'研究方法补充',html:'<p>相同任务、模型、初始条件、扰动和时域；明确双方信息权限、输入限制、调参或训练预算。让方法 A 看全局真实状态、方法 B 只收旧消息时，性能差异就不只来自算法。约束放松后得到更低代价，也改变了问题本身。</p>'},
+      {title:'少发消息只是一个维度',kind:'教学示例',html:'<p>通信例子同时展示广播次数和状态分歧。阈值变大会改变信息新鲜度；少广播若伴随较大残余误差，应一起报告。每个节点广播一次、每条边发送一次、总字节和耗时也不是同一指标。</p><p><button class="term-link" data-lab="communication">对照周期通信与阈值广播</button></p>'},
+      {title:'一次只改一个机制，并保留失败',kind:'入手方法',html:'<p>若要解释“为什么有效”，可以固定其余条件，去掉某个模块或替换一个信息量，做有针对性的消融。先写希望看到什么、什么结果会否定解释，再运行。报告每个体、最差个体、完整时域和失败数，避免平均值遮住少数个体退化。</p><p>这些是本页的实验组织建议，不是对所列论文是否达标的评判。</p>'},
+      {title:'自测：重复运行确定性代码十次，等于十个独立案例吗？',kind:'想一想与参考答案',optional:true,html:'<p>它验证了确定性重复性，但没有增加场景多样性。需要分别说明改变了初值、扰动、随机种子还是任务实例，不能把同一结果的重复记成广泛覆盖。</p>'},
+    ],
+  },
+  {
+    id:'research-question',group:'starter',title:'怎么把“我想研究多智能体”写成一个能检查的问题？',term:'Research Question · Falsifiable Hypothesis · Scope',
+    intro:'先写清对象、限制、比较和判定条件，让别人知道什么结果支持你，什么结果会让你放弃当前解释。',
+    tags:['研究起步','研究问题','选题','假设','可证伪','创新','初学者'],related:['read-first-paper','fair-comparison','first-reproduction','control-learning'],
+    refs:[ref('Z08',2,'Explicit model, graph and synchronization objective'),ref('R01',4,'Explicit information and safety specification')],
+    sections:[
+      {title:'把一句愿望改写为五句话',kind:'研究方法补充',html:'<p>愿望：“我想做更好的协同控制。”问题卡则写：</p><ol><li>对象：哪几个 agent、什么动力学和任务？</li><li>限制：每个 agent 可以知道什么、控制什么？</li><li>机制：准备改变哪一个可执行的环节？</li><li>比较：对照哪种同条件的已有方法？</li><li>判定：看哪些好处、代价、失败与停止条件？</li></ol><p>这张卡让问题变具体，但并不自动证明创新性或可发表性。</p>'},
+      {title:'几个平行入口，按兴趣探索',kind:'问题示例',html:'<p><strong>信息：</strong>旧消息会怎样影响某类任务，补发条件是否值得？<strong>约束：</strong>输入能力有限时，原先可行的目标何时失效？<strong>协作：</strong>总收益改善时，有没有个体承担过大代价？<strong>学习：</strong>哪类状态依赖决策难以由简单规则处理？</p><p>这些是问题框架，尚未做新颖性检索，不是选题推荐或已发现的研究空白。</p>'},
+      {title:'从练习走向研究的交付物',kind:'入手方法',html:'<p>先有能手算、能运行的基础例子；再有一篇论文的问题／假设卡与有边界的复现记录；然后整理近邻文献，做一个同条件的对照；最后用结果决定继续、修改问题或停止。每一步都应留下别人可以检查的材料，而不是只累计阅读篇数。</p><p><button class="term-link" data-study-view="research">填写并下载我的第一张研究问题卡</button></p>'},
+      {title:'自测：加入时延后结果变差，已经知道原因了吗？',kind:'想一想与参考答案',optional:true,html:'<p>这是一个现象。还要排查实现、信息时间戳、离散步长和比较设置，并用有针对性的对照支持机制解释。原因也可能不只一个；承认未解释的结果有助于选择下一步。</p>'},
+    ],
+  },
+];

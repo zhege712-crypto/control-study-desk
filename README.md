@@ -1,8 +1,12 @@
 # 论文学习台 / Control Study Desk
 
-中文解释、英文术语与文献出处相连的静态学习网站。27 个独立知识区块，包含 CBF、CLF、QP、MPC、PE、Hankel、Laplacian、Zeno/MIET 等概念。
+中文解释、英文术语与文献出处相连的静态学习网站。39 个独立知识区块，包含 CBF、CLF、QP、MPC、PE、Hankel、Laplacian、Zeno/MIET 等概念。
 
 在线阅读：https://zhege712-crypto.github.io/control-study-desk/
+
+## 初学者入口
+
+首页提供可跳转的入门路线；交互区包含一致性、队形、通信与安全过滤四个教学例子，支持调整条件、逐步播放、查看数值与公式、自测和下载 Python 代码。研究起步页提供可填写、预览、复制和下载的研究问题卡；草稿只在当前页面内存中保留，不上传，刷新会清空。
 
 ## 论文来源、版权和隐私
 

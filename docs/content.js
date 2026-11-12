@@ -1,7 +1,9 @@
 // Chinese teaching copy is explicitly requested; source notation is retained in each reference.
 import { additionalBlocks } from './terms-expanded.js';
+import { beginnerBlocks } from './beginner-content.js';
 export const groups = [
   { id: 'all', name: '全部区块', description: '从一个问题进入，沿着联系继续。' },
+  { id: 'starter', name: '入门与研究', description: '从具体例子认识多智能体，再把想法写成可检查的问题。' },
   { id: 'terms', name: '专业术语', description: '先读懂缩写和公式中的角色，再回到方法与论文。' },
   { id: 'model', name: '模型与预测', description: '先弄清系统如何变化，再讨论怎样决策。' },
   { id: 'safety', name: '约束与安全', description: '从当前没有违规，走向未来仍有可行选择。' },
@@ -212,4 +214,5 @@ export const blocks = [
     ],
   },
   ...additionalBlocks,
+  ...beginnerBlocks,
 ];

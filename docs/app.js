@@ -1,4 +1,5 @@
 import { groups, blocks } from './content.js';
+import { beginnerHTML, mountBeginner, labNames } from './beginner.js';
 
 const $ = selector => document.querySelector(selector);
 const esc = value => String(value).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
@@ -15,7 +16,9 @@ const IS_PUBLIC = document.documentElement.dataset.edition === 'public';
 const asset = path => new URL(path, import.meta.url).href;
 const localFiles = new Map();
 const localUrls = new Map();
-const defaultState = {view:'overview',group:'all',block:null,q:'',paper:'V01',page:5,context:'recursive'};
+const defaultState = {view:'start',group:'all',block:null,q:'',paper:'V01',page:5,context:'recursive',lab:'consensus'};
+const guideViews = new Set(['start','lab','research']);
+let cleanupBeginner = ()=>{};
 let state = {...defaultState};
 let papers = [], paperById;
 let pdfModulePromise, renderTask, textTask, generation = 0, resizeTimer, toastTimer;
@@ -36,6 +39,8 @@ function locationForState() {
   const p = new URLSearchParams();
   if (state.view === 'detail' && state.block) p.set('block',state.block);
   if (state.view === 'library') p.set('view','papers');
+  if (guideViews.has(state.view)) p.set('view',state.view);
+  if (state.view==='lab') p.set('lab',state.lab);
   if (state.group !== 'all') p.set('group',state.group);
   p.set('paper',state.paper); p.set('page',state.page);
   return '#'+p.toString();
@@ -49,7 +54,9 @@ function applyLocation() {
   state = {...defaultState};
   if (blockById.has(p.get('block'))) {state.block=p.get('block');state.view='detail';state.context=state.block;}
   if (p.get('view')==='papers') state.view='library';
-  if (groupById.has(p.get('group'))) state.group=p.get('group');
+  if (groupById.has(p.get('group'))) {state.group=p.get('group');if(!state.block&&!p.has('view'))state.view='overview';}
+  if (guideViews.has(p.get('view'))) state.view=p.get('view');
+  if (Object.hasOwn(labNames,p.get('lab'))) state.lab=p.get('lab');
   if (paperById.has(p.get('paper'))) state.paper=p.get('paper');
   const page = Number(p.get('page'));
   if (Number.isFinite(page) && page>0) state.page=Math.max(1,Math.min(Math.trunc(page),paperById.get(state.paper).pages));
@@ -66,7 +73,7 @@ function sourcePill(reference) {
 }
 function renderNavigation() {
   $('#block-count').textContent=`学习内容 · ${blocks.length} 个区块`;
-  $('#group-nav').innerHTML=groups.map(g => `<button class="group-button ${state.view!=='library'&&state.group===g.id?'active':''}" data-group="${g.id}" ${state.view!=='library'&&state.group===g.id?'aria-current="page"':''}><span>${g.name}</span><small>${g.id==='all'?blocks.length:blocks.filter(b=>b.group===g.id).length}</small></button>`).join('');
+  $('#group-nav').innerHTML=[['start','初学者入口'],['lab','交互理解'],['research','研究起步']].map(([id,name])=>`<button class="group-button ${state.view===id?'active':''}" data-study-view="${id}" ${state.view===id?'aria-current="page"':''}><span>${name}</span></button>`).join('')+groups.map(g => `<button class="group-button ${!guideViews.has(state.view)&&state.view!=='library'&&state.group===g.id?'active':''}" data-group="${g.id}" ${!guideViews.has(state.view)&&state.view!=='library'&&state.group===g.id?'aria-current="page"':''}><span>${g.name}</span><small>${g.id==='all'?blocks.length:blocks.filter(b=>b.group===g.id).length}</small></button>`).join('');
   $('#library-button').setAttribute('aria-pressed',String(state.view==='library'));
 }
 function renderOverview() {
@@ -121,10 +128,16 @@ function updatePublicSourceAccess() {
   }
 }
 function renderMain(reset=true,moveFocus=false) {
+  cleanupBeginner();
+  const guided=guideViews.has(state.view);
+  $('#workspace').classList.toggle('beginner-mode',guided);
+  if(guided)$('#workspace').classList.remove('reader-mobile-open');
+  $('#reader-toggle').hidden=guided;
   renderNavigation();
-  if (state.view==='detail') renderDetail();else if(state.view==='library')renderLibrary();else renderOverview();
+  if(guided){$('#main-content').innerHTML=beginnerHTML(state.view,state.lab);cleanupBeginner=mountBeginner($('#main-content'),state.view,state.lab);}
+  else if (state.view==='detail') renderDetail();else if(state.view==='library')renderLibrary();else renderOverview();
   if (reset) $('#main').scrollTop=0;
-  document.title=(state.view==='detail'?blockById.get(state.block)?.title:state.view==='library'?'关联论文':'从一个问题开始')+' · 论文学习台';
+  document.title=(state.view==='detail'?blockById.get(state.block)?.title:state.view==='library'?'关联论文':state.view==='start'?'多智能体入门':state.view==='lab'?'交互理解':state.view==='research'?'研究起步':'从一个问题开始')+' · 论文学习台';
   if (moveFocus) $('#main').focus({preventScroll:true});
 }
 function selectBlock(id,{keepSource=false}={}) {
@@ -173,6 +186,7 @@ async function pdfModule() {
 }
 async function showSource({resetScroll=true}={}) {
   readerMetadata();persist();
+  if(guideViews.has(state.view))return;
   if (readerHidden || (matchMedia('(max-width:930px)').matches&&!$('#workspace').classList.contains('reader-mobile-open'))) return;
   const current=++generation;
   renderTask?.cancel();textTask?.cancel();
@@ -243,6 +257,7 @@ async function init() {
           state.context=blockById.has(saved.context)?saved.context:null;
           if(blockById.has(saved.block)&&saved.view==='detail'){state.block=saved.block;state.context=saved.block;state.view='detail';}
           if(groupById.has(saved.group))state.group=saved.group;
+          if(guideViews.has(saved.view)){state.view=saved.view;state.lab=Object.hasOwn(labNames,saved.lab)?saved.lab:'consensus';}
         }
       }catch{/* A malformed saved position should not prevent startup. */}
     }
@@ -272,6 +287,12 @@ async function init() {
     renderMain();updateReaderToggle();showSource();
     document.addEventListener('click',async event=>{
       const el=event.target.closest('button,a');if(!el)return;
+      if(el.dataset.studyView||el.dataset.lab){
+        state.view=el.dataset.lab?'lab':el.dataset.studyView;
+        if(el.dataset.lab&&Object.hasOwn(labNames,el.dataset.lab))state.lab=el.dataset.lab;
+        state.group='all';state.block=null;state.q='';$('#search').value='';
+        renderMain(true,true);updateLocation(true);return;
+      }
       if(el.dataset.block){selectBlock(el.dataset.block);return;}
       if(el.dataset.group){state.group=el.dataset.group;navigateOverview();return;}
       if(el.dataset.source){state.paper=el.dataset.source;state.page=Number(el.dataset.page)||1;state.context=state.view==='detail'?state.block:null;zoom=1;revealReader();updateLocation();showSource();return;}
@@ -284,7 +305,7 @@ async function init() {
         updateLocation();try{await navigator.clipboard.writeText(location.href);notify('区块与原文页码链接已复制');}catch{notify('复制不可用，可直接复制浏览器地址栏');}
       }
     });
-    $('#home-link').addEventListener('click',event=>{event.preventDefault();state.group='all';navigateOverview();});
+    $('#home-link').addEventListener('click',event=>{event.preventDefault();state={...state,view:'start',group:'all',block:null,q:''};$('#search').value='';renderMain(true,true);updateLocation(true);});
     $('#search').addEventListener('input',event=>{state.q=event.target.value;state.view='overview';state.block=null;renderMain();updateLocation();});
     $('#library-button').addEventListener('click',()=>{state.view='library';state.block=null;state.q='';$('#search').value='';renderMain(true,true);updateLocation(true);});
     $('#reader-toggle').addEventListener('click',()=>{

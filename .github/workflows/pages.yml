@@ -22,10 +22,17 @@ jobs:
       url: ${{ steps.deployment.outputs.page_url }}
     steps:
       - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
       - name: Prepare verified local browser dependencies
         run: python3 tools/prepare_vendor.py
       - name: Validate the public source
         run: python3 tools/check_release.py
+      - name: Check teaching models, formulas and links
+        run: node tools/check_models.mjs
+      - name: Run downloadable Python teaching example
+        run: python3 docs/examples/consensus_demo.py
       - uses: actions/configure-pages@v5
       - uses: actions/upload-pages-artifact@v3
         with:
