@@ -1,0 +1,67 @@
+<!doctype html>
+<html lang="zh-CN" data-edition="public">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#ecf1f6">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; font-src 'self'; img-src 'self' data: blob:; connect-src 'self'; worker-src 'self' blob:; object-src 'none'; base-uri 'self'; form-action 'none'">
+  <meta name="referrer" content="no-referrer">
+  <title>论文学习台 · 从问题到原文</title>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 40 40'%3E%3Crect width='40' height='40' rx='10' fill='%23234f75'/%3E%3Cpath d='M10 10h9v20h-9zM22 10h9v12h-9zM22 25h9v5h-9z' fill='white'/%3E%3C/svg%3E">
+  <link rel="stylesheet" href="./vendor/katex/dist/katex.min.css">
+  <link rel="stylesheet" href="./style.css">
+  <script defer src="./vendor/katex/dist/katex.min.js"></script>
+  <script type="module" src="./app.js"></script>
+</head>
+<body>
+
+  <a class="skip-link" href="#main">跳到学习内容</a>
+  <header class="app-header">
+    <a class="brand" href="#" id="home-link" aria-label="论文学习台首页">
+      <svg viewBox="0 0 32 32" aria-hidden="true"><rect x="3" y="4" width="11" height="24" rx="2"/><rect x="18" y="4" width="11" height="14" rx="2"/><rect x="18" y="22" width="11" height="6" rx="2"/></svg>
+      <span>论文学习台<small>从问题到原文</small></span>
+    </a>
+    <label class="global-search"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6.5"/><path d="m16 16 4 4"/></svg><input id="search" type="search" placeholder="搜索概念、问题或英文术语" autocomplete="off" aria-label="搜索知识区块"><kbd>/</kbd></label>
+    <div class="header-actions"><a href="./about.html" class="quiet-button" target="_blank" rel="noopener">来源与隐私</a>
+      <button id="library-button" class="quiet-button" title="浏览与区块关联的五篇论文">关联论文 <span>5</span></button>
+      <button id="reader-toggle" class="quiet-button" aria-pressed="true">收起原文</button>
+    </div>
+  </header>
+  <div class="workspace" id="workspace">
+    <aside class="topic-rail" aria-label="学习内容导航">
+      <div class="rail-heading">按内容探索</div>
+      <nav id="group-nav"></nav>
+      <div class="rail-connections"><span class="connection-lines" aria-hidden="true"><i></i><i></i><i></i></span><p>一个概念，<br>可以连接多篇论文。</p><small>不必按固定顺序阅读。<br>遇到基础知识，随时展开。</small></div>
+      <div class="rail-footer"><span class="local-dot"></span> 公开学习版 <a class="legal-link" href="./about.html" target="_blank" rel="noopener">论文来源与隐私说明</a><small id="block-count">正在载入区块</small></div>
+    </aside>
+    <main id="main" tabindex="-1"><div id="main-content"></div></main>
+    <aside class="reader-panel" id="reader-panel" aria-label="论文原文阅读器">
+      <div class="reader-top"><div><span class="reader-dot"></span> 论文原文</div><button id="reader-expand" class="icon-button" title="放大原文阅读区" aria-label="放大原文阅读区"></button></div>
+      <div class="paper-heading"><label class="sr-only" for="paper-select">选择论文</label><select id="paper-select"></select><p id="paper-title"></p><div id="paper-meta"></div></div>
+      <div class="source-context" id="source-context"></div>
+      <div id="public-source-access" class="local-pdf-access" hidden>
+        <p id="local-pdf-status" role="status"></p>
+        <div class="paper-actions"><a id="source-doi" target="_blank" rel="noopener noreferrer">DOI 出版入口</a><label class="local-file-label">选择本地 PDF<input id="local-pdf-input" type="file" accept=".pdf,application/pdf" aria-label="选择本地 PDF"></label><button id="forget-local-pdf" class="ref-link" hidden>清除所选文件</button></div>
+      </div>
+      <div class="pdf-toolbar">
+        <button id="prev-page" class="icon-button" aria-label="上一页"></button>
+        <label class="page-entry"><input id="page-input" type="number" min="1" value="1" aria-label="PDF 页码"><span id="page-total">/ —</span></label>
+        <button id="next-page" class="icon-button" aria-label="下一页"></button>
+        <span class="toolbar-separator"></span>
+        <button id="zoom-out" class="icon-button" aria-label="缩小"></button>
+        <button id="zoom-reset" class="zoom-label" title="按宽度适配">适宽</button>
+        <button id="zoom-in" class="icon-button" aria-label="放大"></button>
+        <a id="original-link" class="icon-button" target="_blank" rel="noopener" aria-label="在新标签页打开 PDF" title="在新标签页打开 PDF"></a>
+      </div>
+      <div class="pdf-scroll" id="pdf-scroll" tabindex="0" aria-label="PDF 页面，可选择原文文字">
+        <div id="pdf-message" role="status">正在打开本地论文…</div>
+        <div class="pdf-page" id="pdf-page"><canvas id="pdf-canvas" aria-label="原始 PDF 页面"></canvas><div id="text-layer" class="textLayer"></div></div>
+      </div>
+      <div class="reader-bottom"><span id="printed-page"></span><span>原始 PDF · 可选择文字</span></div>
+      <details class="source-details"><summary>版本与阅读范围</summary><div id="source-details-body"></div></details>
+    </aside>
+  </div>
+  <div id="toast" class="toast" role="status" aria-live="polite"></div>
+  <noscript>此学习网页需要启用 JavaScript。论文来源与隐私说明见 about.html。</noscript>
+</body>
+</html>

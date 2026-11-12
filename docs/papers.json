@@ -1,0 +1,127 @@
+[
+  {
+    "id": "R01",
+    "title": "The Safety Filter: A Unified View of Safety-Critical Control in Autonomous Systems",
+    "doi": "10.1146/annurev-control-071723-102940",
+    "kind": "journalArticle",
+    "pages": 26,
+    "year": 2024,
+    "version": "Publisher-layout review PDF",
+    "read_pages": [
+      1,
+      3,
+      4,
+      5,
+      6,
+      7,
+      11,
+      12
+    ],
+    "printed_start": 47,
+    "authors": [
+      "Kai-Chieh Hsu",
+      "Haimin Hu",
+      "Jaime F. Fisac"
+    ],
+    "venue": "Annual Review of Control, Robotics, and Autonomous Systems",
+    "metadata_source": "https://api.crossref.org/works/10.1146/annurev-control-071723-102940",
+    "metadata_checked": "2026-11-12"
+  },
+  {
+    "id": "R02",
+    "title": "An Overview of Systems-Theoretic Guarantees in Data-Driven Model Predictive Control",
+    "doi": "10.1146/annurev-control-030323-024328",
+    "kind": "journalArticle",
+    "pages": 24,
+    "year": 2025,
+    "version": "Publisher-layout review PDF; first online 2024",
+    "read_pages": [
+      1,
+      3,
+      4
+    ],
+    "printed_start": 77,
+    "authors": [
+      "Julian Berberich",
+      "Frank Allgöwer"
+    ],
+    "venue": "Annual Review of Control, Robotics, and Autonomous Systems",
+    "metadata_source": "https://api.crossref.org/works/10.1146/annurev-control-030323-024328",
+    "metadata_checked": "2026-11-12"
+  },
+  {
+    "id": "V01",
+    "title": "Model Predictive Control for Lane Merging Automation With Recursive Feasibility Guarantees and Its Experimental Validation",
+    "doi": "10.1109/tcst.2024.3485306",
+    "kind": "journalArticle",
+    "pages": 16,
+    "year": 2025,
+    "version": "Author-hosted journal manuscript; placeholder publication header",
+    "read_pages": [
+      1,
+      4,
+      5,
+      6
+    ],
+    "printed_start": 1,
+    "authors": [
+      "M. E. Geurts",
+      "A. Katriniok",
+      "E. Silvas",
+      "N. J. Brouwer",
+      "W. P. M. H. Heemels"
+    ],
+    "venue": "IEEE Transactions on Control Systems Technology",
+    "metadata_source": "https://api.crossref.org/works/10.1109/tcst.2024.3485306",
+    "metadata_checked": "2026-11-12"
+  },
+  {
+    "id": "Z08",
+    "title": "Fully Distributed Control of Multiagent Networks With Edge-Based Event-Triggered Communication",
+    "doi": "10.1109/tac.2022.3223973",
+    "kind": "journalArticle",
+    "pages": 8,
+    "year": 2023,
+    "version": "IEEE publisher-layout journal PDF; first online 2022",
+    "read_pages": [
+      1,
+      2,
+      3,
+      5
+    ],
+    "printed_start": 5630,
+    "authors": [
+      "Shaopan Guo",
+      "Xiangyu Meng"
+    ],
+    "venue": "IEEE Transactions on Automatic Control",
+    "metadata_source": "https://api.crossref.org/works/10.1109/tac.2022.3223973",
+    "metadata_checked": "2026-11-12"
+  },
+  {
+    "id": "Z11",
+    "title": "Optimal Re-Sequencing of Electric Vehicle Platoons Based on Deep Reinforcement Learning",
+    "doi": "10.1109/smc54092.2024.10831504",
+    "kind": "conferencePaper",
+    "pages": 6,
+    "year": 2024,
+    "version": "IEEE publisher-layout conference PDF",
+    "read_pages": [
+      1,
+      2,
+      3
+    ],
+    "printed_start": 4250,
+    "authors": [
+      "Miao Liu",
+      "Chu Peng",
+      "Shaopan Guo",
+      "Long Xiao",
+      "Benyun Shi",
+      "Yue Peng"
+    ],
+    "venue": "2024 IEEE International Conference on Systems, Man, and Cybernetics (SMC)",
+    "metadata_source": "https://api.crossref.org/works/10.1109/smc54092.2024.10831504",
+    "metadata_checked": "2026-11-12"
+  }
+]

@@ -1,0 +1,9 @@
+*.pdf
+*.PDF
+.env*
+__pycache__/
+*.pyc
+sources.json
+qa/
+handoffs/
+docs/vendor/
