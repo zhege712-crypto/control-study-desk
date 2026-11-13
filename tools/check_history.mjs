@@ -11,7 +11,7 @@ import {feedbackTrace,feedbackModes} from '../docs/history-models.js';
 const sources=JSON.parse(readFileSync(new URL('../docs/history-sources.json',import.meta.url),'utf8'));
 const katex=createRequire(import.meta.url)('../docs/vendor/katex/dist/katex.min.js');
 const near=(a,b)=>assert(Math.abs(a-b)<1e-10);
-assert.equal(sources.length,10);assert.equal(new Set(sources.map(s=>s.doi.toLowerCase())).size,10);
+assert.equal(sources.length,15);assert.equal(new Set(sources.map(s=>s.doi.toLowerCase())).size,15);
 assert.equal(sources.find(s=>s.id==='H02').doi.toLowerCase(),'10.1098/rspl.1867.0055');
 assert.equal(sources.find(s=>s.id==='H08').year,2017);
 for(const s of sources){assert(s.authors.length&&s.venue&&s.reading_depth&&s.version);assert(new URL(s.access_url).protocol==='https:');}

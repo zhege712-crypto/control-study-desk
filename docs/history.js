@@ -2,7 +2,7 @@ import {historyChapters,relations,relationTypes,conceptNames} from './history-co
 import {feedbackTrace,feedbackModes} from './history-models.js';
 const esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 export const historyRoutes=['overview','feedback','oscillation','network','map','sources'];
-const labels={overview:'概览',feedback:'反馈为什么有效',oscillation:'为什么也会振荡',network:'走向多智能体',map:'知识关系图',sources:'文献与阅读范围'};
+const labels={overview:'控制史长文',feedback:'反馈为什么有效',oscillation:'为什么也会振荡',network:'走向多智能体',map:'知识关系图',sources:'文献与阅读范围'};
 const chapterButton=(id,label)=>`<button class="${id==='overview'?'secondary-button':'term-link'}" data-history-chapter="${id}">${label}</button>`;
 function references(sources,ids){return `<section class="guide-section history-references"><h2>文献与本页使用范围</h2><p>正文中的编号可定位下面的条目。链接在外部打开；本网站不分发论文副本。元数据核对不等于读过正文，选段阅读也不等于完整证明审计。</p>${ids.map(id=>{
   const p=sources.find(p=>p.id===id);if(!p)return `<p>文献 ${esc(id)} 暂未载入，请刷新页面。</p>`;
@@ -16,9 +16,9 @@ export function historyHTML(id='overview',sources=[]){
   if(!historyRoutes.includes(id))id='overview';
   const tabs=`<nav class="history-tabs" aria-label="发展历程章节">${historyRoutes.map(key=>`<button data-history-chapter="${key}" ${key===id?'aria-current="page"':''}>${labels[key]}</button>`).join('')}</nav>`;
   if(id==='map')return `<section class="history-page">${tabs}${mapHTML()}</section>`;
-  if(id==='sources')return `<section class="history-page">${tabs}<h1>控制理论发展与研究方法：补充文献</h1><p class="guide-intro">十篇代表文献补充历史与方法背景，另保留原学习台五篇论文的阅读入口。五篇进行了选段阅读，五篇目前只读摘要。各自范围在条目中列明。</p><p><a href="./history-references.bib" download>下载十篇文献的 BibTeX</a></p>${timeline(sources)}${references(sources,sources.map(p=>p.id))}</section>`;
+  if(id==='sources')return `<section class="history-page">${tabs}<h1>控制理论发展与研究方法：补充文献</h1><p class="guide-intro">${sources.length} 篇文献补充控制史与方法背景，另保留原阅读器五篇论文。${sources.filter(p=>p.reading_level==='selected-text').length} 篇进行了选段阅读，${sources.filter(p=>p.reading_level==='abstract').length} 篇读到摘要，${sources.filter(p=>p.reading_level==='metadata').length} 篇只核对书目；各自范围在条目中列明。</p><p><a href="./history-references.bib" download>下载 ${sources.length} 篇文献的 BibTeX</a></p>${timeline(sources)}${references(sources,sources.map(p=>p.id))}</section>`;
   const c=historyChapters.find(c=>c.id===id),next=historyChapters[historyChapters.indexOf(c)+1];
-  return `<article class="history-page">${tabs}<header><h1>${c.title}</h1><p class="guide-intro">${c.subtitle}</p><p class="small-copy">中文讲解保留英文术语。历史出处、教学推导与研究练习分别标注。${id==='overview'?'概览连接八个主题，三篇样章展开第一条学习路径。':''}</p></header>${id==='overview'?`<div class="history-entry"><p>先走一条能手算的线：反馈怎样纠偏 → 延迟怎样改变稳定性 → 局部反馈怎样形成多智能体行为。</p>${chapterButton('feedback','开始读第一篇样章')} · ${chapterButton('map','打开可点击知识关系图')}</div>`:''}${c.sections.map((s,i)=>`<section class="guide-section" id="history-section-${i}"><h2>${s.title}</h2>${s.html}</section>`).join('')}${['feedback','oscillation'].includes(id)?teachingLabHTML(id==='oscillation'):''}${id==='overview'?timeline(sources):''}<section class="guide-section"><h2>沿着联系继续</h2>${next?chapterButton(next.id,'下一篇：'+next.title):chapterButton('map','打开知识关系图')} · ${chapterButton('sources','查看全部补充文献')} · <button class="term-link" data-study-view="research">进入研究行动单</button></section>${references(sources,c.refs)}</article>`;
+  return `<article class="history-page">${tabs}<header><h1>${c.title}</h1><p class="guide-intro">${c.subtitle}</p><p class="small-copy">中文讲解保留英文术语。历史出处、教学推导与研究练习分别标注。${id==='overview'?'长文按时代连续叙述，三篇手算样章可在正文后接续阅读。':''}</p></header>${id==='overview'?`<details class="history-contents" open><summary>本篇目录 · ${c.sections.length} 节</summary><ol>${c.sections.map((section,i)=>`<li><button class="term-link" data-history-section="${i}">${section.title}</button></li>`).join('')}</ol></details>`:''}${c.sections.map((s,i)=>`<section class="guide-section" id="history-section-${i}"><h2>${s.title}</h2>${s.html}</section>`).join('')}${['feedback','oscillation'].includes(id)?teachingLabHTML(id==='oscillation'):''}${id==='overview'?timeline(sources):''}<section class="guide-section"><h2>沿着联系继续</h2>${next?chapterButton(next.id,'下一篇：'+next.title):chapterButton('map','打开知识关系图')} · ${chapterButton('sources','查看全部补充文献')} · <button class="term-link" data-study-view="research">进入研究行动单</button></section>${references(sources,c.refs)}</article>`;
 }
 function renderMath(root){root.querySelectorAll('[data-math]').forEach(el=>window.katex?.render(el.dataset.math,el,{displayMode:true,throwOnError:false,trust:false}));}
 function mountLab(root){
@@ -37,6 +37,7 @@ export function mountHistory(root,id){
   renderMath(root);
   const listener=event=>{
     const button=event.target.closest('button');if(!button)return;
+    if(button.dataset.historySection!==undefined){const target=root.querySelector('#history-section-'+button.dataset.historySection);if(target){target.scrollIntoView({behavior:'instant',block:'start'});const heading=target.querySelector('h2');heading?.setAttribute('tabindex','-1');heading?.focus({preventScroll:true});}}
     if(button.dataset.historyRef){const el=root.querySelector('#history-source-'+button.dataset.historyRef);if(el){el.open=true;el.scrollIntoView({behavior:'instant',block:'start'});el.querySelector('summary')?.focus({preventScroll:true});}}
   };
   root.addEventListener('click',listener);

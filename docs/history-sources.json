@@ -14,11 +14,20 @@
     "pages": "3-43",
     "metadata_url": "https://api.crossref.org/works/10.1016%2Fj.automatica.2013.10.012",
     "metadata_checked": "2026-11-12",
-    "reading_depth": "选读 PDF 第 2、6、15、16、18–20、24 页的指定段落；未读全文或审计证明",
+    "reading_depth": "2026-11-12 与 13 日选读 PDF 第 1–10、14–16、18–20、24 页中的历史及方法段落；并非逐页全文阅读或证明审计",
     "version": "期刊排版版，机构公开副本；正式 2014，2013 首次在线",
     "read_pages": [
+      1,
       2,
+      3,
+      4,
+      5,
       6,
+      7,
+      8,
+      9,
+      10,
+      14,
       15,
       16,
       18,
@@ -28,7 +37,8 @@
     ],
     "access_url": "https://people.smp.uq.edu.au/YoniNazarathy/Control4406_2014/resources/AstromKumarControlPerspective2014.pdf",
     "pdf_pages": 41,
-    "scope": "历史节点或方法背景；自编教学计算不是论文复现。没有完整证明审计。"
+    "scope": "历史节点或方法背景；自编教学计算不是论文复现。没有完整证明审计。",
+    "reading_level": "selected-text"
   },
   {
     "id": "H02",
@@ -52,7 +62,8 @@
     ],
     "access_url": "https://webhomes.maths.ed.ac.uk/~v1ranick/papers/maxwell1.pdf",
     "pdf_pages": 14,
-    "scope": "历史节点或方法背景；自编教学计算不是论文复现。没有完整证明审计。"
+    "scope": "历史节点或方法背景；自编教学计算不是论文复现。没有完整证明审计。",
+    "reading_level": "selected-text"
   },
   {
     "id": "H03",
@@ -72,7 +83,8 @@
     "version": "正式期刊元数据；正文版本未核对",
     "read_pages": [],
     "access_url": "https://onlinelibrary.wiley.com/doi/abs/10.1002/j.1538-7305.1932.tb02344.x",
-    "scope": "历史节点或方法背景；自编教学计算不是论文复现。没有完整证明审计。"
+    "scope": "历史节点或方法背景；自编教学计算不是论文复现。没有完整证明审计。",
+    "reading_level": "abstract"
   },
   {
     "id": "H04",
@@ -95,7 +107,8 @@
     ],
     "access_url": "https://cs.yale.edu/homes/yry/readings/general/Kalman1960.pdf",
     "pdf_pages": 12,
-    "scope": "历史节点或方法背景；自编教学计算不是论文复现。没有完整证明审计。"
+    "scope": "历史节点或方法背景；自编教学计算不是论文复现。没有完整证明审计。",
+    "reading_level": "selected-text"
   },
   {
     "id": "H05",
@@ -121,7 +134,8 @@
     ],
     "access_url": "https://www.doyle.caltech.edu/images/doyle/2/20/TAC1989.pdf",
     "pdf_pages": 17,
-    "scope": "历史节点或方法背景；自编教学计算不是论文复现。没有完整证明审计。"
+    "scope": "历史节点或方法背景；自编教学计算不是论文复现。没有完整证明审计。",
+    "reading_level": "selected-text"
   },
   {
     "id": "H06",
@@ -144,7 +158,8 @@
     "version": "正式期刊元数据；正文版本未核对",
     "read_pages": [],
     "access_url": "https://experts.illinois.edu/en/publications/constrained-model-predictive-control-stability-and-optimality/",
-    "scope": "历史节点或方法背景；自编教学计算不是论文复现。没有完整证明审计。"
+    "scope": "历史节点或方法背景；自编教学计算不是论文复现。没有完整证明审计。",
+    "reading_level": "abstract"
   },
   {
     "id": "H07",
@@ -166,7 +181,8 @@
     "version": "正式期刊元数据；正文版本未核对",
     "read_pages": [],
     "access_url": "https://murray.cds.caltech.edu/index.php/Consensus_and_Cooperation_in_Networked_Multi-Agent_Systems",
-    "scope": "历史节点或方法背景；自编教学计算不是论文复现。没有完整证明审计。"
+    "scope": "历史节点或方法背景；自编教学计算不是论文复现。没有完整证明审计。",
+    "reading_level": "abstract"
   },
   {
     "id": "H08",
@@ -192,7 +208,8 @@
     ],
     "access_url": "https://arxiv.org/pdf/1609.06408v2",
     "pdf_pages": 17,
-    "scope": "历史节点或方法背景；自编教学计算不是论文复现。没有完整证明审计。"
+    "scope": "历史节点或方法背景；自编教学计算不是论文复现。没有完整证明审计。",
+    "reading_level": "selected-text"
   },
   {
     "id": "H09",
@@ -215,7 +232,8 @@
     "version": "正式期刊元数据；正文版本未核对",
     "read_pages": [],
     "access_url": "https://ftp.esat.kuleuven.be/stadius/markovsky/abstracts/04-101.html",
-    "scope": "历史节点或方法背景；自编教学计算不是论文复现。没有完整证明审计。"
+    "scope": "历史节点或方法背景；自编教学计算不是论文复现。没有完整证明审计。",
+    "reading_level": "abstract"
   },
   {
     "id": "H10",
@@ -235,6 +253,124 @@
     "version": "正式期刊元数据；正文版本未核对",
     "read_pages": [],
     "access_url": "https://www.annualreviews.org/content/journals/10.1146/annurev-control-053018-023825",
-    "scope": "历史节点或方法背景；自编教学计算不是论文复现。没有完整证明审计。"
+    "scope": "历史节点或方法背景；自编教学计算不是论文复现。没有完整证明审计。",
+    "reading_level": "abstract"
+  },
+  {
+    "id": "H11",
+    "doi": "10.1002/j.1538-7305.1934.tb00652.x",
+    "title": "Stabilized Feedback Amplifiers*",
+    "authors": [
+      "H. S. Black"
+    ],
+    "venue": "Bell System Technical Journal",
+    "year": 1934,
+    "volume": "13",
+    "issue": "1",
+    "pages": "1-18",
+    "metadata_url": "https://api.crossref.org/works/10.1002%2Fj.1538-7305.1934.tb00652.x",
+    "metadata_checked": "2026-11-13",
+    "reading_depth": "核对正式书目；正文未读。历史叙述另据 H01 的通信史选段",
+    "read_pages": [],
+    "version": "正式期刊元数据；未核对正文版本",
+    "access_url": "https://doi.org/10.1002/j.1538-7305.1934.tb00652.x",
+    "scope": "控制史的代表性文献节点；不是首次发明或完整证明审计的声明。",
+    "reading_level": "metadata"
+  },
+  {
+    "id": "H12",
+    "doi": "10.1115/1.4019264",
+    "title": "Optimum Settings for Automatic Controllers",
+    "authors": [
+      "J. G. Ziegler",
+      "N. B. Nichols"
+    ],
+    "venue": "Journal of Fluids Engineering",
+    "year": 1942,
+    "volume": "64",
+    "issue": "8",
+    "pages": "759-765",
+    "metadata_url": "https://api.crossref.org/works/10.1115%2F1.4019264",
+    "metadata_checked": "2026-11-13",
+    "reading_depth": "阅读 Crossref 所载原文摘要并核对正式书目；正文未读",
+    "read_pages": [],
+    "version": "1942 年原始论文的数字化书目；平台沿用后继期刊名 Journal of Fluids Engineering，原刊为 Transactions of the ASME。不是 1993 年重印。",
+    "access_url": "https://doi.org/10.1115/1.4019264",
+    "scope": "控制史的代表性文献节点；不是首次发明或完整证明审计的声明。",
+    "reading_level": "abstract"
+  },
+  {
+    "id": "H13",
+    "doi": "10.1016/0005-1098(78)90001-8",
+    "title": "Model predictive heuristic control: Applications to industrial processes",
+    "authors": [
+      "J. Richalet",
+      "A. Rault",
+      "J.L. Testud",
+      "J. Papon"
+    ],
+    "venue": "Automatica",
+    "year": 1978,
+    "volume": "14",
+    "issue": "5",
+    "pages": "413-428",
+    "metadata_url": "https://api.crossref.org/works/10.1016%2F0005-1098%2878%2990001-8",
+    "metadata_checked": "2026-11-13",
+    "reading_depth": "选读 PDF 第 1 页摘要与引言；未审计后文证明",
+    "read_pages": [
+      1
+    ],
+    "version": "期刊排版版，大学网站公开副本",
+    "access_url": "https://skoge.folk.ntnu.no/puublications_others/1978_Richalet_Predictive-control_Automatica.pdf",
+    "scope": "控制史的代表性文献节点；不是首次发明或完整证明审计的声明。",
+    "pdf_pages": 16,
+    "reading_level": "selected-text"
+  },
+  {
+    "id": "H14",
+    "doi": "10.1109/tac.1986.1104412",
+    "title": "Distributed asynchronous deterministic and stochastic gradient optimization algorithms",
+    "authors": [
+      "J. Tsitsiklis",
+      "D. Bertsekas",
+      "M. Athans"
+    ],
+    "venue": "IEEE Transactions on Automatic Control",
+    "year": 1986,
+    "volume": "31",
+    "issue": "9",
+    "pages": "803-812",
+    "metadata_url": "https://api.crossref.org/works/10.1109%2FTAC.1986.1104412",
+    "metadata_checked": "2026-11-13",
+    "reading_depth": "选读 PDF 第 1 页摘要与引言；未审计后文证明",
+    "read_pages": [
+      1
+    ],
+    "version": "期刊排版版，大学网站公开副本",
+    "access_url": "https://www.mit.edu/~JNT/Papers/J014-86-asyn-grad.pdf",
+    "scope": "控制史的代表性文献节点；不是首次发明或完整证明审计的声明。",
+    "pdf_pages": 10,
+    "reading_level": "selected-text"
+  },
+  {
+    "id": "H15",
+    "doi": "10.1073/pnas.40.4.231",
+    "title": "DYNAMIC PROGRAMMING AND A NEW FORMALISM IN THE CALCULUS OF VARIATIONS",
+    "authors": [
+      "Richard Bellman"
+    ],
+    "venue": "Proceedings of the National Academy of Sciences",
+    "year": 1954,
+    "volume": "40",
+    "issue": "4",
+    "pages": "231-235",
+    "metadata_url": "https://api.crossref.org/works/10.1073%2Fpnas.40.4.231",
+    "metadata_checked": "2026-11-13",
+    "reading_depth": "核对正式书目；正文未读。动态规划背景另据 H01 选段",
+    "read_pages": [],
+    "version": "正式期刊元数据；未核对正文版本",
+    "access_url": "https://doi.org/10.1073/pnas.40.4.231",
+    "scope": "控制史的代表性文献节点；不是首次发明或完整证明审计的声明。",
+    "reading_level": "metadata"
   }
 ]

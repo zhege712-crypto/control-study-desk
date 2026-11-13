@@ -5,6 +5,11 @@
 .history-tabs button[aria-current=page]{font-weight:650;text-decoration:underline;text-underline-offset:8px}
 .history-entry{padding:20px 0;border-bottom:1px solid var(--line);font-size:14px;line-height:2}
 .history-entry p{max-width:70ch;margin-bottom:12px;color:var(--muted)}
+.history-contents{padding:20px 0;border-bottom:1px solid var(--line);font-size:14px;line-height:1.9}
+.history-contents summary{cursor:pointer;color:var(--blue)}
+.history-contents ol{margin:16px 0 0;padding-left:24px}
+.history-contents li{padding:5px 0;color:var(--muted)}
+.history-contents button{text-align:left;line-height:1.9}
 .history-page .guide-section{scroll-margin-top:20px}
 .history-cite{font:inherit;font-size:.9em;color:var(--blue);padding:0 3px;text-align:left;text-decoration:underline;text-underline-offset:3px}
 .history-timeline{list-style:none;padding:0;margin:20px 0}
