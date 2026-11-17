@@ -1,7 +1,8 @@
 import { groups, blocks } from './content.js';
-import { beginnerHTML, mountBeginner, labNames } from './beginner.js';
+import { beginnerHTML, mountBeginner, labNames } from './beginner.js?v=20261117-visual2';
 import {historyHTML,mountHistory,historyRoutes} from './history.js';
-import {studiesHTML,mountStudies,studyIds,deepStudyIds,studyMatches,studyResultsHTML} from './paper-studies.js';
+import {studiesHTML,mountStudies,studyIds,deepStudyIds,studyMatches,studyResultsHTML} from './paper-studies.js?v=20261117-visual2';
+import {visualsHTML,mountVisuals,visualIds,inlineVisual,conceptVisuals} from './visual-math.js?v=20261117-visual2';
 
 const $ = selector => document.querySelector(selector);
 const esc = value => String(value).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
@@ -19,7 +20,7 @@ const asset = path => new URL(path, import.meta.url).href;
 const localFiles = new Map();
 const localUrls = new Map();
 const defaultState = {view:'start',group:'all',block:null,q:'',paper:'V01',page:5,context:'recursive',lab:'consensus',chapter:'overview',study:null,deep:null};
-const guideViews = new Set(['start','lab','research','history','studies']);
+const guideViews = new Set(['start','lab','research','history','studies','visuals']);
 let historySources=[];
 let studySources=[];
 let cleanupBeginner = ()=>{};
@@ -48,6 +49,7 @@ function locationForState() {
   if (state.view==='history') p.set('chapter',state.chapter);
   if (state.view==='studies'&&state.study) p.set('study',state.study);
   if (state.view==='studies'&&state.deep) p.set('deep',state.deep);
+  if (state.view==='visuals') p.set('visual',state.visual||'feedback');
   if (state.group !== 'all') p.set('group',state.group);
   p.set('paper',state.paper); p.set('page',state.page);
   return '#'+p.toString();
@@ -66,6 +68,7 @@ function applyLocation() {
   if(historyRoutes.includes(p.get('chapter')))state.chapter=p.get('chapter');
   if(studyIds.includes(p.get('study')))state.study=p.get('study');
   if(deepStudyIds.includes(p.get('deep')))state.deep=p.get('deep');
+  if(visualIds.includes(p.get('visual')))state.visual=p.get('visual');
   if (Object.hasOwn(labNames,p.get('lab'))) state.lab=p.get('lab');
   if (paperById.has(p.get('paper'))) state.paper=p.get('paper');
   const page = Number(p.get('page'));
@@ -88,6 +91,7 @@ function renderNavigation() {
   $('#library-button span').textContent=papers.length;
   $('#library-button').title='浏览可在本版阅读器中打开的论文';
   $('#group-nav').insertAdjacentHTML('afterbegin',`<button class="group-button ${state.view==='studies'?'active':''}" data-study-index ${state.view==='studies'?'aria-current="page"':''}><span>论文区块与精读</span><small>23</small></button>`);
+  $('#group-nav').insertAdjacentHTML('afterbegin',`<button class="group-button ${state.view==='visuals'?'active':''}" data-study-view="visuals" ${state.view==='visuals'?'aria-current="page"':''}><span>看图理解数学</span><small>10</small></button>`);
 }
 function renderOverview() {
   const query=state.q.trim().toLocaleLowerCase();
@@ -129,6 +133,7 @@ function renderDetail() {
   }).join('');
   $('#main-content').innerHTML=`<article class="block-detail"><div class="detail-nav"><button class="back-button" data-action="back">${icon('back')} 返回区块</button><button class="copy-link" data-action="copy-link">${icon('link')}复制链接</button></div><header class="detail-header"><h1>${b.title}</h1><p class="english-term">${esc(b.term)}</p><p class="detail-intro">${b.intro}</p><div class="detail-source-bar">${b.refs.map(sourcePill).join('')}</div></header><div class="detail-body">${b.sections.map(s=>`<section class="learning-section">${s.optional?`<details><summary>${s.title}<small>${s.kind}</small></summary><div class="section-copy">${s.html}</div></details>`:`<div class="section-heading"><h2>${s.title}</h2><span class="kind">${s.kind}</span></div><div class="section-copy">${s.html}${s.demo==='braking'?brakingHTML():''}</div>`}</section>`).join('')}</div><h2 class="related-heading">沿着联系，继续理解</h2><div class="related-list">${b.related.map(id=>`<button class="related-link" data-block="${id}"><span>${blockById.get(id).title}</span>${icon('arrow')}</button>`).join('')}</div><section class="source-reference-list"><h2>回到出处</h2>${refs}<p class="scope-note">这里的关联是为了学习而组织，并不表示不同论文共享模型、符号或保证。所列页码为 PDF 文件页序；版本与本次选读范围见原文面板。</p></section></article>`;
   formatMath($('#main-content'));setupBraking();
+  if(conceptVisuals[b.id])$('#main-content .detail-body').insertAdjacentHTML('afterbegin',inlineVisual(conceptVisuals[b.id],{caption:'先用图认识这一步数学'}));
 }
 const versionLabel=p=>({'R01':'出版社版综述','R02':'出版社版综述 · 2024 首次在线','V01':'作者期刊稿 · 页眉刊期占位','Z08':'IEEE 期刊版 · 2022 首次在线','Z11':'IEEE 会议版'}[p.id]||p.version);
 function renderLibrary() {
@@ -157,7 +162,8 @@ function renderMain(reset=true,moveFocus=false) {
   if(guided)$('#workspace').classList.remove('reader-mobile-open');
   $('#reader-toggle').hidden=guided;
   renderNavigation();
-  if(state.view==='studies'){$('#main-content').innerHTML=studiesHTML({study:state.study,deep:state.deep,sources:studySources,readers:papers,isPublic:IS_PUBLIC});cleanupBeginner=mountStudies($('#main-content'));}
+  if(state.view==='visuals'){$('#main-content').innerHTML=visualsHTML(state.visual);cleanupBeginner=mountVisuals($('#main-content'),state.visual);}
+  else if(state.view==='studies'){$('#main-content').innerHTML=studiesHTML({study:state.study,deep:state.deep,sources:studySources,readers:papers,isPublic:IS_PUBLIC});cleanupBeginner=mountStudies($('#main-content'));}
   else if(state.view==='history'){$('#main-content').innerHTML=historyHTML(state.chapter,historySources);cleanupBeginner=mountHistory($('#main-content'),state.chapter);}
   else if(guided){$('#main-content').innerHTML=beginnerHTML(state.view,state.lab);cleanupBeginner=mountBeginner($('#main-content'),state.view,state.lab);}
   else if (state.view==='detail') renderDetail();else if(state.view==='library')renderLibrary();else renderOverview();
@@ -165,6 +171,7 @@ function renderMain(reset=true,moveFocus=false) {
   if (reset) window.scrollTo({top:0,left:0,behavior:'instant'});
   document.title=(state.view==='history'?'控制理论发展与知识关联':state.view==='detail'?blockById.get(state.block)?.title:state.view==='library'?'关联论文':state.view==='start'?'多智能体入门':state.view==='lab'?'交互理解':state.view==='research'?'研究起步':'从一个问题开始')+' · 论文学习台';
   if(state.view==='studies')document.title='论文区块与精读 · 论文学习台';
+  if(state.view==='visuals')document.title='看图理解数学 · 论文学习台';
   if (moveFocus) $('#main').focus({preventScroll:true});
 }
 function selectBlock(id,{keepSource=false}={}) {
@@ -290,6 +297,7 @@ async function init() {
           if(guideViews.has(saved.view)){state.view=saved.view;state.lab=Object.hasOwn(labNames,saved.lab)?saved.lab:'consensus';state.chapter=historyRoutes.includes(saved.chapter)?saved.chapter:'overview';}
           if(studyIds.includes(saved.study))state.study=saved.study;
           if(deepStudyIds.includes(saved.deep))state.deep=saved.deep;
+          if(visualIds.includes(saved.visual))state.visual=saved.visual;
         }
       }catch{/* A malformed saved position should not prevent startup. */}
     }
@@ -319,6 +327,7 @@ async function init() {
     renderMain();updateReaderToggle();showSource();
     document.addEventListener('click',async event=>{
       const el=event.target.closest('button,a');if(!el)return;
+      if(el.dataset.visual&&visualIds.includes(el.dataset.visual)){state.view='visuals';state.visual=el.dataset.visual;state.group='all';state.block=null;state.q='';$('#search').value='';renderMain(true,true);updateLocation(true);return;}
       if(el.hasAttribute('data-study-index')||el.dataset.studyPaper||el.dataset.studyDeep){state.view='studies';state.study=studyIds.includes(el.dataset.studyPaper)?el.dataset.studyPaper:null;state.deep=deepStudyIds.includes(el.dataset.studyDeep)?el.dataset.studyDeep:null;state.group='all';state.block=null;state.q='';$('#search').value='';renderMain(true,true);updateLocation(true);return;}
       if(el.dataset.studySource&&paperById.has(el.dataset.studySource)){state.paper=el.dataset.studySource;state.page=Number(el.dataset.page)||1;state.context=null;state.view='library';renderMain(true,true);zoom=1;revealReader();updateLocation(true);showSource();return;}
       if(el.dataset.historyChapter&&historyRoutes.includes(el.dataset.historyChapter)){state.view='history';state.chapter=el.dataset.historyChapter;state.block=null;state.group='all';state.q='';$('#search').value='';renderMain(true,true);updateLocation(true);return;}

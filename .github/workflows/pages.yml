@@ -43,6 +43,8 @@ jobs:
         run: node tools/check_history.mjs
       - name: Check paper coverage, deep-reading formulas and examples
         run: node tools/check_studies.mjs
+      - name: Check visual mathematics and diagram coverage
+        run: node tools/check_visuals.mjs
       - uses: actions/configure-pages@v5
       - uses: actions/upload-pages-artifact@v3
         with:
