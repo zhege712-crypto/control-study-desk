@@ -1,0 +1,528 @@
+[
+  {
+    "id": "R01",
+    "title": "The Safety Filter: A Unified View of Safety-Critical Control in Autonomous Systems",
+    "doi": "10.1146/annurev-control-071723-102940",
+    "kind": "journalArticle",
+    "pages": 26,
+    "year": 2024,
+    "version": "Publisher-layout review PDF",
+    "read_pages": [
+      1,
+      3,
+      4,
+      5,
+      6,
+      7,
+      11,
+      12
+    ],
+    "printed_start": 47,
+    "authors": [
+      "Kai-Chieh Hsu",
+      "Haimin Hu",
+      "Jaime F. Fisac"
+    ],
+    "venue": "Annual Review of Control, Robotics, and Autonomous Systems",
+    "metadata_source": "https://api.crossref.org/works/10.1146/annurev-control-071723-102940",
+    "metadata_checked": "2026-11-12",
+    "reading_depth": "选读 PDF 第 1、3、4、5、6、7、11、12 页；未作完整证明审计或实验复现"
+  },
+  {
+    "id": "R02",
+    "title": "An Overview of Systems-Theoretic Guarantees in Data-Driven Model Predictive Control",
+    "doi": "10.1146/annurev-control-030323-024328",
+    "kind": "journalArticle",
+    "pages": 24,
+    "year": 2025,
+    "version": "Publisher-layout review PDF; first online 2024",
+    "read_pages": [
+      1,
+      3,
+      4
+    ],
+    "printed_start": 77,
+    "authors": [
+      "Julian Berberich",
+      "Frank Allgöwer"
+    ],
+    "venue": "Annual Review of Control, Robotics, and Autonomous Systems",
+    "metadata_source": "https://api.crossref.org/works/10.1146/annurev-control-030323-024328",
+    "metadata_checked": "2026-11-12",
+    "reading_depth": "选读 PDF 第 1、3、4 页；未作完整证明审计或实验复现"
+  },
+  {
+    "id": "V01",
+    "title": "Model Predictive Control for Lane Merging Automation With Recursive Feasibility Guarantees and Its Experimental Validation",
+    "doi": "10.1109/tcst.2024.3485306",
+    "kind": "journalArticle",
+    "pages": 16,
+    "year": 2025,
+    "version": "Author-hosted journal manuscript; placeholder publication header",
+    "read_pages": [
+      1,
+      4,
+      5,
+      6
+    ],
+    "printed_start": 1,
+    "authors": [
+      "M. E. Geurts",
+      "A. Katriniok",
+      "E. Silvas",
+      "N. J. Brouwer",
+      "W. P. M. H. Heemels"
+    ],
+    "venue": "IEEE Transactions on Control Systems Technology",
+    "metadata_source": "https://api.crossref.org/works/10.1109/tcst.2024.3485306",
+    "metadata_checked": "2026-11-12",
+    "reading_depth": "选读 PDF 第 1、4、5、6 页；未作完整证明审计或实验复现"
+  },
+  {
+    "id": "Z08",
+    "title": "Fully Distributed Control of Multiagent Networks With Edge-Based Event-Triggered Communication",
+    "doi": "10.1109/tac.2022.3223973",
+    "kind": "journalArticle",
+    "pages": 8,
+    "year": 2023,
+    "version": "IEEE publisher-layout journal PDF; first online 2022",
+    "read_pages": [
+      1,
+      2,
+      3,
+      5
+    ],
+    "printed_start": 5630,
+    "authors": [
+      "Shaopan Guo",
+      "Xiangyu Meng"
+    ],
+    "venue": "IEEE Transactions on Automatic Control",
+    "metadata_source": "https://api.crossref.org/works/10.1109/tac.2022.3223973",
+    "metadata_checked": "2026-11-12",
+    "reading_depth": "选读 PDF 第 1、2、3、5 页；未作完整证明审计或实验复现"
+  },
+  {
+    "id": "Z11",
+    "title": "Optimal Re-Sequencing of Electric Vehicle Platoons Based on Deep Reinforcement Learning",
+    "doi": "10.1109/smc54092.2024.10831504",
+    "kind": "conferencePaper",
+    "pages": 6,
+    "year": 2024,
+    "version": "IEEE publisher-layout conference PDF",
+    "read_pages": [
+      1,
+      2,
+      3
+    ],
+    "printed_start": 4250,
+    "authors": [
+      "Miao Liu",
+      "Chu Peng",
+      "Shaopan Guo",
+      "Long Xiao",
+      "Benyun Shi",
+      "Yue Peng"
+    ],
+    "venue": "2024 IEEE International Conference on Systems, Man, and Cybernetics (SMC)",
+    "metadata_source": "https://api.crossref.org/works/10.1109/smc54092.2024.10831504",
+    "metadata_checked": "2026-11-12",
+    "reading_depth": "选读 PDF 第 1、2、3 页；未作完整证明审计或实验复现"
+  },
+  {
+    "id": "H01",
+    "doi": "10.1016/j.automatica.2013.10.012",
+    "title": "Control: A perspective",
+    "authors": [
+      "Karl J. Åström",
+      "P.R. Kumar"
+    ],
+    "venue": "Automatica",
+    "year": 2014,
+    "volume": "50",
+    "issue": "1",
+    "pages": "3-43",
+    "metadata_url": "https://api.crossref.org/works/10.1016%2Fj.automatica.2013.10.012",
+    "metadata_checked": "2026-11-12",
+    "reading_depth": "2026-11-12 与 13 日选读 PDF 第 1–10、14–16、18–20、24 页中的历史及方法段落；并非逐页全文阅读或证明审计",
+    "version": "期刊排版版，机构公开副本；正式 2014，2013 首次在线",
+    "read_pages": [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10,
+      14,
+      15,
+      16,
+      18,
+      19,
+      20,
+      24
+    ],
+    "access_url": "https://people.smp.uq.edu.au/YoniNazarathy/Control4406_2014/resources/AstromKumarControlPerspective2014.pdf",
+    "scope": "历史节点或方法背景；自编教学计算不是论文复现。没有完整证明审计。",
+    "reading_level": "selected-text"
+  },
+  {
+    "id": "H02",
+    "doi": "10.1098/rspl.1867.0055",
+    "title": "I. On governors",
+    "authors": [
+      "James Clerk Maxwell"
+    ],
+    "venue": "Proceedings of the Royal Society of London",
+    "year": 1868,
+    "volume": "",
+    "issue": "16",
+    "pages": "270-283",
+    "metadata_url": "https://api.crossref.org/works/10.1098%2Frspl.1867.0055",
+    "metadata_checked": "2026-11-12",
+    "reading_depth": "选读 PDF 第 2 页正文与第 3 页开头；另核对第 1 页日期及身份",
+    "version": "Proceedings of the Royal Society of London 16, 270–283 的扫描副本",
+    "read_pages": [
+      2,
+      3
+    ],
+    "access_url": "https://webhomes.maths.ed.ac.uk/~v1ranick/papers/maxwell1.pdf",
+    "scope": "历史节点或方法背景；自编教学计算不是论文复现。没有完整证明审计。",
+    "reading_level": "selected-text"
+  },
+  {
+    "id": "H03",
+    "doi": "10.1002/j.1538-7305.1932.tb02344.x",
+    "title": "Regeneration Theory",
+    "authors": [
+      "H. Nyquist"
+    ],
+    "venue": "Bell System Technical Journal",
+    "year": 1932,
+    "volume": "11",
+    "issue": "1",
+    "pages": "126-147",
+    "metadata_url": "https://api.crossref.org/works/10.1002%2Fj.1538-7305.1932.tb02344.x",
+    "metadata_checked": "2026-11-12",
+    "reading_depth": "出版社页面摘要；未读论文正文",
+    "version": "正式期刊元数据；正文版本未核对",
+    "read_pages": [],
+    "access_url": "https://onlinelibrary.wiley.com/doi/abs/10.1002/j.1538-7305.1932.tb02344.x",
+    "scope": "历史节点或方法背景；自编教学计算不是论文复现。没有完整证明审计。",
+    "reading_level": "abstract"
+  },
+  {
+    "id": "H04",
+    "doi": "10.1115/1.3662552",
+    "title": "A New Approach to Linear Filtering and Prediction Problems",
+    "authors": [
+      "R. E. Kalman"
+    ],
+    "venue": "Journal of Basic Engineering",
+    "year": 1960,
+    "volume": "82",
+    "issue": "1",
+    "pages": "35-45",
+    "metadata_url": "https://api.crossref.org/works/10.1115%2F1.3662552",
+    "metadata_checked": "2026-11-12",
+    "reading_depth": "选读 PDF 第 1 页引言段落；未审计滤波推导",
+    "version": "大学网站所存 12 页转录版，非出版社原始排版",
+    "read_pages": [
+      1
+    ],
+    "access_url": "https://cs.yale.edu/homes/yry/readings/general/Kalman1960.pdf",
+    "scope": "历史节点或方法背景；自编教学计算不是论文复现。没有完整证明审计。",
+    "reading_level": "selected-text"
+  },
+  {
+    "id": "H05",
+    "doi": "10.1109/9.29425",
+    "title": "State-space solutions to standard H₂ and H∞ control problems",
+    "authors": [
+      "J.C. Doyle",
+      "K. Glover",
+      "P.P. Khargonekar",
+      "B.A. Francis"
+    ],
+    "venue": "IEEE Transactions on Automatic Control",
+    "year": 1989,
+    "volume": "34",
+    "issue": "8",
+    "pages": "831-847",
+    "metadata_url": "https://api.crossref.org/works/10.1109%2F9.29425",
+    "metadata_checked": "2026-11-12",
+    "reading_depth": "选读 PDF 第 1 页摘要及引言；未审计 Riccati 证明",
+    "version": "IEEE TAC 1989 期刊排版版，作者网站副本",
+    "read_pages": [
+      1
+    ],
+    "access_url": "https://www.doyle.caltech.edu/images/doyle/2/20/TAC1989.pdf",
+    "scope": "历史节点或方法背景；自编教学计算不是论文复现。没有完整证明审计。",
+    "reading_level": "selected-text"
+  },
+  {
+    "id": "H06",
+    "doi": "10.1016/s0005-1098(99)00214-9",
+    "title": "Constrained model predictive control: Stability and optimality",
+    "authors": [
+      "D.Q. Mayne",
+      "J.B. Rawlings",
+      "C.V. Rao",
+      "P.O.M. Scokaert"
+    ],
+    "venue": "Automatica",
+    "year": 2000,
+    "volume": "36",
+    "issue": "6",
+    "pages": "789-814",
+    "metadata_url": "https://api.crossref.org/works/10.1016%2FS0005-1098%2899%2900214-9",
+    "metadata_checked": "2026-11-12",
+    "reading_depth": "作者所在大学页面摘要；未读论文正文",
+    "version": "正式期刊元数据；正文版本未核对",
+    "read_pages": [],
+    "access_url": "https://experts.illinois.edu/en/publications/constrained-model-predictive-control-stability-and-optimality/",
+    "scope": "历史节点或方法背景；自编教学计算不是论文复现。没有完整证明审计。",
+    "reading_level": "abstract"
+  },
+  {
+    "id": "H07",
+    "doi": "10.1109/jproc.2006.887293",
+    "title": "Consensus and Cooperation in Networked Multi-Agent Systems",
+    "authors": [
+      "Reza Olfati-Saber",
+      "J. Alex Fax",
+      "Richard M. Murray"
+    ],
+    "venue": "Proceedings of the IEEE",
+    "year": 2007,
+    "volume": "95",
+    "issue": "1",
+    "pages": "215-233",
+    "metadata_url": "https://api.crossref.org/works/10.1109%2FJPROC.2006.887293",
+    "metadata_checked": "2026-11-12",
+    "reading_depth": "2026-11-17 精读作者技术报告 PDF 第 2–13 页；涵盖固定拓扑、守恒量、有向／离散一致性与性能；未精读后续切换拓扑和编队章节",
+    "version": "作者技术报告 TR06-004，2006 年 4 月；与正式 2007 期刊文献对应，未声称逐字相同",
+    "read_pages": [
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10,
+      11,
+      12,
+      13
+    ],
+    "access_url": "https://tr.engineering.dartmouth.edu/reports/tr06-004.pdf",
+    "scope": "历史节点或方法背景；自编教学计算不是论文复现。没有完整证明审计。",
+    "reading_level": "selected-text"
+  },
+  {
+    "id": "H08",
+    "doi": "10.1109/tac.2016.2638961",
+    "title": "Control Barrier Function Based Quadratic Programs for Safety Critical Systems",
+    "authors": [
+      "Aaron D. Ames",
+      "Xiangru Xu",
+      "Jessy W. Grizzle",
+      "Paulo Tabuada"
+    ],
+    "venue": "IEEE Transactions on Automatic Control",
+    "year": 2017,
+    "volume": "62",
+    "issue": "8",
+    "pages": "3861-3876",
+    "metadata_url": "https://api.crossref.org/works/10.1109%2FTAC.2016.2638961",
+    "metadata_checked": "2026-11-12",
+    "reading_depth": "2026-11-17 精读 arXiv v2 PDF 第 1–11 页；包括障碍函数、CBF、CLF-QP 与受力 ACC 转折；未复现仿真或审计全部证明",
+    "version": "arXiv:1609.06408v2，2016-12-05；对应期刊正式 2017",
+    "read_pages": [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10,
+      11
+    ],
+    "access_url": "https://arxiv.org/pdf/1609.06408v2",
+    "scope": "历史节点或方法背景；自编教学计算不是论文复现。没有完整证明审计。",
+    "reading_level": "selected-text"
+  },
+  {
+    "id": "H09",
+    "doi": "10.1016/j.sysconle.2004.09.003",
+    "title": "A note on persistency of excitation",
+    "authors": [
+      "Jan C. Willems",
+      "Paolo Rapisarda",
+      "Ivan Markovsky",
+      "Bart L.M. De Moor"
+    ],
+    "venue": "Systems & Control Letters",
+    "year": 2005,
+    "volume": "54",
+    "issue": "4",
+    "pages": "325-329",
+    "metadata_url": "https://api.crossref.org/works/10.1016%2Fj.sysconle.2004.09.003",
+    "metadata_checked": "2026-11-12",
+    "reading_depth": "2026-11-17 读取期刊 PDF 全部 5 页的网页提取文本，重点为 Theorem 1、Hankel/PE 与证明主线；复杂排版改用 R02 的输入输出表示交叉核对，未独立完整审计证明",
+    "version": "正式 2005 期刊版；作者机构托管 PDF，经网页提取层阅读，本机原始文件下载未成功",
+    "read_pages": [
+      1,
+      2,
+      3,
+      4,
+      5
+    ],
+    "access_url": "https://homes.esat.kuleuven.be/~sistawww/smc/jwillems/Articles/JournalArticles/2005.2.pdf",
+    "scope": "历史节点或方法背景；自编教学计算不是论文复现。没有完整证明审计。",
+    "reading_level": "selected-text"
+  },
+  {
+    "id": "H10",
+    "doi": "10.1146/annurev-control-053018-023825",
+    "title": "A Tour of Reinforcement Learning: The View from Continuous Control",
+    "authors": [
+      "Benjamin Recht"
+    ],
+    "venue": "Annual Review of Control, Robotics, and Autonomous Systems",
+    "year": 2019,
+    "volume": "2",
+    "issue": "1",
+    "pages": "253-279",
+    "metadata_url": "https://api.crossref.org/works/10.1146%2Fannurev-control-053018-023825",
+    "metadata_checked": "2026-11-12",
+    "reading_depth": "出版社页面摘要及 Crossref 摘要；未读论文正文",
+    "version": "正式期刊元数据；正文版本未核对",
+    "read_pages": [],
+    "access_url": "https://www.annualreviews.org/content/journals/10.1146/annurev-control-053018-023825",
+    "scope": "历史节点或方法背景；自编教学计算不是论文复现。没有完整证明审计。",
+    "reading_level": "abstract"
+  },
+  {
+    "id": "H11",
+    "doi": "10.1002/j.1538-7305.1934.tb00652.x",
+    "title": "Stabilized Feedback Amplifiers*",
+    "authors": [
+      "H. S. Black"
+    ],
+    "venue": "Bell System Technical Journal",
+    "year": 1934,
+    "volume": "13",
+    "issue": "1",
+    "pages": "1-18",
+    "metadata_url": "https://api.crossref.org/works/10.1002%2Fj.1538-7305.1934.tb00652.x",
+    "metadata_checked": "2026-11-13",
+    "reading_depth": "核对正式书目；正文未读。历史叙述另据 H01 的通信史选段",
+    "version": "正式期刊元数据；未核对正文版本",
+    "read_pages": [],
+    "access_url": "https://doi.org/10.1002/j.1538-7305.1934.tb00652.x",
+    "scope": "控制史的代表性文献节点；不是首次发明或完整证明审计的声明。",
+    "reading_level": "metadata"
+  },
+  {
+    "id": "H12",
+    "doi": "10.1115/1.4019264",
+    "title": "Optimum Settings for Automatic Controllers",
+    "authors": [
+      "J. G. Ziegler",
+      "N. B. Nichols"
+    ],
+    "venue": "Journal of Fluids Engineering",
+    "year": 1942,
+    "volume": "64",
+    "issue": "8",
+    "pages": "759-765",
+    "metadata_url": "https://api.crossref.org/works/10.1115%2F1.4019264",
+    "metadata_checked": "2026-11-13",
+    "reading_depth": "阅读 Crossref 所载原文摘要并核对正式书目；正文未读",
+    "version": "1942 年原始论文的数字化书目；平台沿用后继期刊名 Journal of Fluids Engineering，原刊为 Transactions of the ASME。不是 1993 年重印。",
+    "read_pages": [],
+    "access_url": "https://doi.org/10.1115/1.4019264",
+    "scope": "控制史的代表性文献节点；不是首次发明或完整证明审计的声明。",
+    "reading_level": "abstract"
+  },
+  {
+    "id": "H13",
+    "doi": "10.1016/0005-1098(78)90001-8",
+    "title": "Model predictive heuristic control: Applications to industrial processes",
+    "authors": [
+      "J. Richalet",
+      "A. Rault",
+      "J.L. Testud",
+      "J. Papon"
+    ],
+    "venue": "Automatica",
+    "year": 1978,
+    "volume": "14",
+    "issue": "5",
+    "pages": "413-428",
+    "metadata_url": "https://api.crossref.org/works/10.1016%2F0005-1098%2878%2990001-8",
+    "metadata_checked": "2026-11-13",
+    "reading_depth": "选读 PDF 第 1 页摘要与引言；未审计后文证明",
+    "version": "期刊排版版，大学网站公开副本",
+    "read_pages": [
+      1
+    ],
+    "access_url": "https://skoge.folk.ntnu.no/puublications_others/1978_Richalet_Predictive-control_Automatica.pdf",
+    "scope": "控制史的代表性文献节点；不是首次发明或完整证明审计的声明。",
+    "reading_level": "selected-text"
+  },
+  {
+    "id": "H14",
+    "doi": "10.1109/tac.1986.1104412",
+    "title": "Distributed asynchronous deterministic and stochastic gradient optimization algorithms",
+    "authors": [
+      "J. Tsitsiklis",
+      "D. Bertsekas",
+      "M. Athans"
+    ],
+    "venue": "IEEE Transactions on Automatic Control",
+    "year": 1986,
+    "volume": "31",
+    "issue": "9",
+    "pages": "803-812",
+    "metadata_url": "https://api.crossref.org/works/10.1109%2FTAC.1986.1104412",
+    "metadata_checked": "2026-11-13",
+    "reading_depth": "选读 PDF 第 1 页摘要与引言；未审计后文证明",
+    "version": "期刊排版版，大学网站公开副本",
+    "read_pages": [
+      1
+    ],
+    "access_url": "https://www.mit.edu/~JNT/Papers/J014-86-asyn-grad.pdf",
+    "scope": "控制史的代表性文献节点；不是首次发明或完整证明审计的声明。",
+    "reading_level": "selected-text"
+  },
+  {
+    "id": "H15",
+    "doi": "10.1073/pnas.40.4.231",
+    "title": "DYNAMIC PROGRAMMING AND A NEW FORMALISM IN THE CALCULUS OF VARIATIONS",
+    "authors": [
+      "Richard Bellman"
+    ],
+    "venue": "Proceedings of the National Academy of Sciences",
+    "year": 1954,
+    "volume": "40",
+    "issue": "4",
+    "pages": "231-235",
+    "metadata_url": "https://api.crossref.org/works/10.1073%2Fpnas.40.4.231",
+    "metadata_checked": "2026-11-13",
+    "reading_depth": "核对正式书目；正文未读。动态规划背景另据 H01 选段",
+    "version": "正式期刊元数据；未核对正文版本",
+    "read_pages": [],
+    "access_url": "https://doi.org/10.1073/pnas.40.4.231",
+    "scope": "控制史的代表性文献节点；不是首次发明或完整证明审计的声明。",
+    "reading_level": "metadata"
+  }
+]

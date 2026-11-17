@@ -36,7 +36,6 @@
       24
     ],
     "access_url": "https://people.smp.uq.edu.au/YoniNazarathy/Control4406_2014/resources/AstromKumarControlPerspective2014.pdf",
-    "pdf_pages": 41,
     "scope": "历史节点或方法背景；自编教学计算不是论文复现。没有完整证明审计。",
     "reading_level": "selected-text"
   },
@@ -61,7 +60,6 @@
       3
     ],
     "access_url": "https://webhomes.maths.ed.ac.uk/~v1ranick/papers/maxwell1.pdf",
-    "pdf_pages": 14,
     "scope": "历史节点或方法背景；自编教学计算不是论文复现。没有完整证明审计。",
     "reading_level": "selected-text"
   },
@@ -106,7 +104,6 @@
       1
     ],
     "access_url": "https://cs.yale.edu/homes/yry/readings/general/Kalman1960.pdf",
-    "pdf_pages": 12,
     "scope": "历史节点或方法背景；自编教学计算不是论文复现。没有完整证明审计。",
     "reading_level": "selected-text"
   },
@@ -133,7 +130,6 @@
       1
     ],
     "access_url": "https://www.doyle.caltech.edu/images/doyle/2/20/TAC1989.pdf",
-    "pdf_pages": 17,
     "scope": "历史节点或方法背景；自编教学计算不是论文复现。没有完整证明审计。",
     "reading_level": "selected-text"
   },
@@ -177,12 +173,25 @@
     "pages": "215-233",
     "metadata_url": "https://api.crossref.org/works/10.1109%2FJPROC.2006.887293",
     "metadata_checked": "2026-11-12",
-    "reading_depth": "作者项目页摘要；未读论文正文",
-    "version": "正式期刊元数据；正文版本未核对",
-    "read_pages": [],
-    "access_url": "https://murray.cds.caltech.edu/index.php/Consensus_and_Cooperation_in_Networked_Multi-Agent_Systems",
+    "reading_depth": "2026-11-17 精读作者技术报告 PDF 第 2–13 页；涵盖固定拓扑、守恒量、有向／离散一致性与性能；未精读后续切换拓扑和编队章节",
+    "version": "作者技术报告 TR06-004，2006 年 4 月；与正式 2007 期刊文献对应，未声称逐字相同",
+    "read_pages": [
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10,
+      11,
+      12,
+      13
+    ],
+    "access_url": "https://tr.engineering.dartmouth.edu/reports/tr06-004.pdf",
     "scope": "历史节点或方法背景；自编教学计算不是论文复现。没有完整证明审计。",
-    "reading_level": "abstract"
+    "reading_level": "selected-text"
   },
   {
     "id": "H08",
@@ -201,13 +210,22 @@
     "pages": "3861-3876",
     "metadata_url": "https://api.crossref.org/works/10.1109%2FTAC.2016.2638961",
     "metadata_checked": "2026-11-12",
-    "reading_depth": "选读 PDF 第 1 页摘要与引言段落；不是期刊终稿证明审计",
+    "reading_depth": "2026-11-17 精读 arXiv v2 PDF 第 1–11 页；包括障碍函数、CBF、CLF-QP 与受力 ACC 转折；未复现仿真或审计全部证明",
     "version": "arXiv:1609.06408v2，2016-12-05；对应期刊正式 2017",
     "read_pages": [
-      1
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10,
+      11
     ],
     "access_url": "https://arxiv.org/pdf/1609.06408v2",
-    "pdf_pages": 17,
     "scope": "历史节点或方法背景；自编教学计算不是论文复现。没有完整证明审计。",
     "reading_level": "selected-text"
   },
@@ -228,12 +246,18 @@
     "pages": "325-329",
     "metadata_url": "https://api.crossref.org/works/10.1016%2Fj.sysconle.2004.09.003",
     "metadata_checked": "2026-11-12",
-    "reading_depth": "作者项目页摘要；未读论文正文",
-    "version": "正式期刊元数据；正文版本未核对",
-    "read_pages": [],
-    "access_url": "https://ftp.esat.kuleuven.be/stadius/markovsky/abstracts/04-101.html",
+    "reading_depth": "2026-11-17 读取期刊 PDF 全部 5 页的网页提取文本，重点为 Theorem 1、Hankel/PE 与证明主线；复杂排版改用 R02 的输入输出表示交叉核对，未独立完整审计证明",
+    "version": "正式 2005 期刊版；作者机构托管 PDF，经网页提取层阅读，本机原始文件下载未成功",
+    "read_pages": [
+      1,
+      2,
+      3,
+      4,
+      5
+    ],
+    "access_url": "https://homes.esat.kuleuven.be/~sistawww/smc/jwillems/Articles/JournalArticles/2005.2.pdf",
     "scope": "历史节点或方法背景；自编教学计算不是论文复现。没有完整证明审计。",
-    "reading_level": "abstract"
+    "reading_level": "selected-text"
   },
   {
     "id": "H10",
@@ -271,8 +295,8 @@
     "metadata_url": "https://api.crossref.org/works/10.1002%2Fj.1538-7305.1934.tb00652.x",
     "metadata_checked": "2026-11-13",
     "reading_depth": "核对正式书目；正文未读。历史叙述另据 H01 的通信史选段",
-    "read_pages": [],
     "version": "正式期刊元数据；未核对正文版本",
+    "read_pages": [],
     "access_url": "https://doi.org/10.1002/j.1538-7305.1934.tb00652.x",
     "scope": "控制史的代表性文献节点；不是首次发明或完整证明审计的声明。",
     "reading_level": "metadata"
@@ -293,8 +317,8 @@
     "metadata_url": "https://api.crossref.org/works/10.1115%2F1.4019264",
     "metadata_checked": "2026-11-13",
     "reading_depth": "阅读 Crossref 所载原文摘要并核对正式书目；正文未读",
-    "read_pages": [],
     "version": "1942 年原始论文的数字化书目；平台沿用后继期刊名 Journal of Fluids Engineering，原刊为 Transactions of the ASME。不是 1993 年重印。",
+    "read_pages": [],
     "access_url": "https://doi.org/10.1115/1.4019264",
     "scope": "控制史的代表性文献节点；不是首次发明或完整证明审计的声明。",
     "reading_level": "abstract"
@@ -317,13 +341,12 @@
     "metadata_url": "https://api.crossref.org/works/10.1016%2F0005-1098%2878%2990001-8",
     "metadata_checked": "2026-11-13",
     "reading_depth": "选读 PDF 第 1 页摘要与引言；未审计后文证明",
+    "version": "期刊排版版，大学网站公开副本",
     "read_pages": [
       1
     ],
-    "version": "期刊排版版，大学网站公开副本",
     "access_url": "https://skoge.folk.ntnu.no/puublications_others/1978_Richalet_Predictive-control_Automatica.pdf",
     "scope": "控制史的代表性文献节点；不是首次发明或完整证明审计的声明。",
-    "pdf_pages": 16,
     "reading_level": "selected-text"
   },
   {
@@ -343,13 +366,12 @@
     "metadata_url": "https://api.crossref.org/works/10.1109%2FTAC.1986.1104412",
     "metadata_checked": "2026-11-13",
     "reading_depth": "选读 PDF 第 1 页摘要与引言；未审计后文证明",
+    "version": "期刊排版版，大学网站公开副本",
     "read_pages": [
       1
     ],
-    "version": "期刊排版版，大学网站公开副本",
     "access_url": "https://www.mit.edu/~JNT/Papers/J014-86-asyn-grad.pdf",
     "scope": "控制史的代表性文献节点；不是首次发明或完整证明审计的声明。",
-    "pdf_pages": 10,
     "reading_level": "selected-text"
   },
   {
@@ -367,8 +389,8 @@
     "metadata_url": "https://api.crossref.org/works/10.1073%2Fpnas.40.4.231",
     "metadata_checked": "2026-11-13",
     "reading_depth": "核对正式书目；正文未读。动态规划背景另据 H01 选段",
-    "read_pages": [],
     "version": "正式期刊元数据；未核对正文版本",
+    "read_pages": [],
     "access_url": "https://doi.org/10.1073/pnas.40.4.231",
     "scope": "控制史的代表性文献节点；不是首次发明或完整证明审计的声明。",
     "reading_level": "metadata"

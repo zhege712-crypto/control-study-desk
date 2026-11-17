@@ -1,6 +1,7 @@
 import { groups, blocks } from './content.js';
 import { beginnerHTML, mountBeginner, labNames } from './beginner.js';
 import {historyHTML,mountHistory,historyRoutes} from './history.js';
+import {studiesHTML,mountStudies,studyIds,deepStudyIds,studyMatches,studyResultsHTML} from './paper-studies.js';
 
 const $ = selector => document.querySelector(selector);
 const esc = value => String(value).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
@@ -17,9 +18,10 @@ const IS_PUBLIC = document.documentElement.dataset.edition === 'public';
 const asset = path => new URL(path, import.meta.url).href;
 const localFiles = new Map();
 const localUrls = new Map();
-const defaultState = {view:'start',group:'all',block:null,q:'',paper:'V01',page:5,context:'recursive',lab:'consensus',chapter:'overview'};
-const guideViews = new Set(['start','lab','research','history']);
+const defaultState = {view:'start',group:'all',block:null,q:'',paper:'V01',page:5,context:'recursive',lab:'consensus',chapter:'overview',study:null,deep:null};
+const guideViews = new Set(['start','lab','research','history','studies']);
 let historySources=[];
+let studySources=[];
 let cleanupBeginner = ()=>{};
 let state = {...defaultState};
 let papers = [], paperById;
@@ -44,6 +46,8 @@ function locationForState() {
   if (guideViews.has(state.view)) p.set('view',state.view);
   if (state.view==='lab') p.set('lab',state.lab);
   if (state.view==='history') p.set('chapter',state.chapter);
+  if (state.view==='studies'&&state.study) p.set('study',state.study);
+  if (state.view==='studies'&&state.deep) p.set('deep',state.deep);
   if (state.group !== 'all') p.set('group',state.group);
   p.set('paper',state.paper); p.set('page',state.page);
   return '#'+p.toString();
@@ -60,6 +64,8 @@ function applyLocation() {
   if (groupById.has(p.get('group'))) {state.group=p.get('group');if(!state.block&&!p.has('view'))state.view='overview';}
   if (guideViews.has(p.get('view'))) state.view=p.get('view');
   if(historyRoutes.includes(p.get('chapter')))state.chapter=p.get('chapter');
+  if(studyIds.includes(p.get('study')))state.study=p.get('study');
+  if(deepStudyIds.includes(p.get('deep')))state.deep=p.get('deep');
   if (Object.hasOwn(labNames,p.get('lab'))) state.lab=p.get('lab');
   if (paperById.has(p.get('paper'))) state.paper=p.get('paper');
   const page = Number(p.get('page'));
@@ -79,14 +85,23 @@ function renderNavigation() {
   $('#block-count').textContent=`学习内容 · ${blocks.length} 个区块`;
   $('#group-nav').innerHTML=[['start','初学者入口'],['history','发展历程与关联'],['lab','交互理解'],['research','研究起步']].map(([id,name])=>`<button class="group-button ${state.view===id?'active':''}" data-study-view="${id}" ${state.view===id?'aria-current="page"':''}><span>${name}</span></button>`).join('')+groups.map(g => `<button class="group-button ${!guideViews.has(state.view)&&state.view!=='library'&&state.group===g.id?'active':''}" data-group="${g.id}" ${!guideViews.has(state.view)&&state.view!=='library'&&state.group===g.id?'aria-current="page"':''}><span>${g.name}</span><small>${g.id==='all'?blocks.length:blocks.filter(b=>b.group===g.id).length}</small></button>`).join('');
   $('#library-button').setAttribute('aria-pressed',String(state.view==='library'));
+  $('#library-button span').textContent=papers.length;
+  $('#library-button').title='浏览可在本版阅读器中打开的论文';
+  $('#group-nav').insertAdjacentHTML('afterbegin',`<button class="group-button ${state.view==='studies'?'active':''}" data-study-index ${state.view==='studies'?'aria-current="page"':''}><span>论文区块与精读</span><small>23</small></button>`);
 }
 function renderOverview() {
   const query=state.q.trim().toLocaleLowerCase();
   const filtered=blocks.filter(b => (state.group==='all'||b.group===state.group) && (!query||[b.title,b.term,b.intro,...b.tags,...b.refs.map(r=>r.paper),...b.sections.map(s=>s.html.replace(/<[^>]*>/g,' '))].join(' ').toLocaleLowerCase().includes(query)));
   const group=groupById.get(state.group);
+  const paperMatches=studyMatches(state.q);
   const title=query?'找到相关的知识区块':state.group==='all'?'从一个问题开始':group.name;
   const description=query?`搜索“${esc(state.q)}”，共找到 ${filtered.length} 个区块。`:state.group==='all'?'把论文里的知识拆开，再把相关的内容连起来。<br>挑一个想弄懂的问题，<strong>随时打开原文对照。</strong>':group.description;
   $('#main-content').innerHTML=`<section aria-label="知识区块"><h1>${title}</h1><p class="overview-description">${description}</p><div class="section-rule"><span>${query?'搜索结果':'可独立阅读的知识区块'}</span><span>${filtered.length} 个区块 · 按需探索</span></div>${filtered.length?`<div class="block-grid">${filtered.map((b,i)=>`<article class="block-card ${i===0&&!query?'featured':''}"><h2>${b.title}</h2><div class="english-term">${esc(b.term)}</div><p>${b.intro}</p><div class="card-footer"><span class="source-ids">${groupById.get(b.group).name} · ${[...new Set(b.refs.map(r=>r.paper))].join(' / ')}</span><span>${icon('arrow')}</span></div><button class="card-open" data-block="${b.id}" aria-label="阅读：${esc(b.title)}"></button></article>`).join('')}</div>`:`<div class="empty-state"><h2>暂时没有匹配的区块</h2><p>可以试试“安全”“MPC”“状态”或英文术语。<br>搜索范围是首批学习内容。</p><button class="secondary-button" data-action="clear-search">清除搜索，查看全部</button></div>`}<p class="scope-note">首批内容关联 5 篇文献，论文副本不在公开站提供，是可继续扩充的学习样本。<br>区块里的教学重组与示例会单独标明，来源保留具体版本和页码。</p></section>`;
+  if(query&&paperMatches.length){
+    $('#main-content .empty-state')?.remove();
+    $('#main-content .overview-description').textContent=`搜索“${state.q}”：${filtered.length} 个概念区块，${paperMatches.length} 个论文／精读区块。`;
+    $('#main-content').insertAdjacentHTML('beforeend',`<section class="study-search-results"><h2>论文与精读区块</h2>${studyResultsHTML(paperMatches)}</section>`);
+  }
 }
 function brakingHTML() {
   return `<div class="braking-demo"><label for="demo-speed">当前速度 <output id="speed-value">14 m/s</output></label><input id="demo-speed" type="range" min="4" max="26" step="1" value="14"><label for="demo-distance">到墙的距离 <output id="distance-value">30 m</output></label><input id="demo-distance" type="range" min="5" max="90" step="1" value="30"><svg id="braking-diagram" viewBox="0 0 360 92" role="img" aria-label="示意停车点与墙的位置"></svg><p class="demo-result" id="demo-result" aria-live="polite"></p><p class="demo-caption">解析示意 · 理想质点 · b = 4 m/s² · 非论文实验数据</p></div>`;
@@ -115,9 +130,13 @@ function renderDetail() {
   $('#main-content').innerHTML=`<article class="block-detail"><div class="detail-nav"><button class="back-button" data-action="back">${icon('back')} 返回区块</button><button class="copy-link" data-action="copy-link">${icon('link')}复制链接</button></div><header class="detail-header"><h1>${b.title}</h1><p class="english-term">${esc(b.term)}</p><p class="detail-intro">${b.intro}</p><div class="detail-source-bar">${b.refs.map(sourcePill).join('')}</div></header><div class="detail-body">${b.sections.map(s=>`<section class="learning-section">${s.optional?`<details><summary>${s.title}<small>${s.kind}</small></summary><div class="section-copy">${s.html}</div></details>`:`<div class="section-heading"><h2>${s.title}</h2><span class="kind">${s.kind}</span></div><div class="section-copy">${s.html}${s.demo==='braking'?brakingHTML():''}</div>`}</section>`).join('')}</div><h2 class="related-heading">沿着联系，继续理解</h2><div class="related-list">${b.related.map(id=>`<button class="related-link" data-block="${id}"><span>${blockById.get(id).title}</span>${icon('arrow')}</button>`).join('')}</div><section class="source-reference-list"><h2>回到出处</h2>${refs}<p class="scope-note">这里的关联是为了学习而组织，并不表示不同论文共享模型、符号或保证。所列页码为 PDF 文件页序；版本与本次选读范围见原文面板。</p></section></article>`;
   formatMath($('#main-content'));setupBraking();
 }
-const versionLabel=p=>({'R01':'出版社版综述','R02':'出版社版综述 · 2024 首次在线','V01':'作者期刊稿 · 页眉刊期占位','Z08':'IEEE 期刊版 · 2022 首次在线','Z11':'IEEE 会议版'}[p.id]);
+const versionLabel=p=>({'R01':'出版社版综述','R02':'出版社版综述 · 2024 首次在线','V01':'作者期刊稿 · 页眉刊期占位','Z08':'IEEE 期刊版 · 2022 首次在线','Z11':'IEEE 会议版'}[p.id]||p.version);
 function renderLibrary() {
   $('#main-content').innerHTML=`<h1>关联论文</h1><p class="overview-description">从知识区块回到出处，也可以选择自己的 PDF 在浏览器中整篇阅读。<br>这 5 篇是首批内容的来源。</p><div class="paper-list">${papers.map(p=>`<article class="paper-item"><div class="paper-id">${p.id} · ${p.year} · ${p.kind==='conferencePaper'?'会议论文':'期刊文献'}</div><h2>${esc(p.title)}</h2><p>${versionLabel(p)} · ${p.pages} 页<br>本版选读 PDF 页：${p.read_pages.join('、')}；未作完整证明审计。</p><div class="paper-actions"><button class="secondary-button" data-source="${p.id}" data-page="1">${icon('book')} 查看出处 / 选择 PDF</button><button class="ref-link" data-paper-blocks="${p.id}">查看关联知识区块</button><a href="https://doi.org/${encodeURI(p.doi)}" target="_blank" rel="noopener">DOI 出版入口</a></div></article>`).join('')}</div>`;
+  if(state.deep)$('#main-content').insertAdjacentHTML('afterbegin',`<p><button class="term-link" data-study-deep="${state.deep}">返回刚才的精读</button></p>`);
+  else if(state.study)$('#main-content').insertAdjacentHTML('afterbegin',`<p><button class="term-link" data-study-paper="${state.study}">返回刚才的论文区块</button></p>`);
+  $('#main-content .overview-description').innerHTML=`本版阅读器收录 ${papers.length} 篇可对照的原文。另有 20 篇论文的词汇与贡献、3 篇核心章节精读。<br><button class="term-link" data-study-index>打开全部论文区块</button>`;
+  $('#main-content').querySelectorAll('.paper-item').forEach((item,i)=>item.querySelector('.paper-actions').insertAdjacentHTML('afterbegin',`<button class="ref-link" data-study-paper="${papers[i].id}">词汇与贡献</button>`));
 }
 function updatePublicSourceAccess() {
   if (!IS_PUBLIC) return;
@@ -138,11 +157,14 @@ function renderMain(reset=true,moveFocus=false) {
   if(guided)$('#workspace').classList.remove('reader-mobile-open');
   $('#reader-toggle').hidden=guided;
   renderNavigation();
-  if(state.view==='history'){$('#main-content').innerHTML=historyHTML(state.chapter,historySources);cleanupBeginner=mountHistory($('#main-content'),state.chapter);}
+  if(state.view==='studies'){$('#main-content').innerHTML=studiesHTML({study:state.study,deep:state.deep,sources:studySources,readers:papers,isPublic:IS_PUBLIC});cleanupBeginner=mountStudies($('#main-content'));}
+  else if(state.view==='history'){$('#main-content').innerHTML=historyHTML(state.chapter,historySources);cleanupBeginner=mountHistory($('#main-content'),state.chapter);}
   else if(guided){$('#main-content').innerHTML=beginnerHTML(state.view,state.lab);cleanupBeginner=mountBeginner($('#main-content'),state.view,state.lab);}
   else if (state.view==='detail') renderDetail();else if(state.view==='library')renderLibrary();else renderOverview();
   if (reset) $('#main').scrollTop=0;
+  if (reset) window.scrollTo({top:0,left:0,behavior:'instant'});
   document.title=(state.view==='history'?'控制理论发展与知识关联':state.view==='detail'?blockById.get(state.block)?.title:state.view==='library'?'关联论文':state.view==='start'?'多智能体入门':state.view==='lab'?'交互理解':state.view==='research'?'研究起步':'从一个问题开始')+' · 论文学习台';
+  if(state.view==='studies')document.title='论文区块与精读 · 论文学习台';
   if (moveFocus) $('#main').focus({preventScroll:true});
 }
 function selectBlock(id,{keepSource=false}={}) {
@@ -174,7 +196,7 @@ function readerMetadata() {
   $('#zoom-reset').textContent=zoom===1?'适宽':Math.round(zoom*100)+'%';
   $('#original-link').href=IS_PUBLIC ? (localUrls.has(p.id)?`${localUrls.get(p.id)}#page=${state.page}`:`https://doi.org/${encodeURI(p.doi)}`) : asset(`papers/${p.id}.pdf#page=${state.page}`);
   $('#original-link').setAttribute('aria-label',IS_PUBLIC&&!localUrls.has(p.id)?'打开 DOI 出版入口':'在新标签页打开 PDF');
-  $('#printed-page').textContent=`PDF 第 ${state.page} 页 · 印刷页 ${p.printed_start+state.page-1}`;
+  $('#printed-page').textContent=`PDF 第 ${state.page} 页${Number.isFinite(p.printed_start)?' · 印刷页 '+(p.printed_start+state.page-1):' · 采用版本页序'}`;
   if (IS_PUBLIC) $('#printed-page').nextElementSibling.textContent=localFiles.has(p.id)?'所选本地 PDF · 可选择文字':'选读位置 · 公开站未托管全文';
   const b=blockById.get(state.context);
   const match=b?.refs.find(r=>r.paper===p.id&&r.page===state.page);
@@ -254,6 +276,8 @@ async function init() {
   try {
     const response=await fetch(asset('papers.json'));if(!response.ok)throw new Error('Missing papers.json');papers=await response.json();
     const historyResponse=await fetch(asset('history-sources.json'));if(!historyResponse.ok)throw new Error('Missing history-sources.json');historySources=await historyResponse.json();
+    const studiesResponse=await fetch(asset('study-sources.json'));if(!studiesResponse.ok)throw new Error('Missing study-sources.json');studySources=await studiesResponse.json();
+    if(!IS_PUBLIC){const extra=await fetch(asset('local-papers.json'));if(extra.ok)papers.push(...await extra.json());}
     paperById=new Map(papers.map(p=>[p.id,p]));
     if(location.hash)applyLocation();else{
       try {
@@ -264,6 +288,8 @@ async function init() {
           if(blockById.has(saved.block)&&saved.view==='detail'){state.block=saved.block;state.context=saved.block;state.view='detail';}
           if(groupById.has(saved.group))state.group=saved.group;
           if(guideViews.has(saved.view)){state.view=saved.view;state.lab=Object.hasOwn(labNames,saved.lab)?saved.lab:'consensus';state.chapter=historyRoutes.includes(saved.chapter)?saved.chapter:'overview';}
+          if(studyIds.includes(saved.study))state.study=saved.study;
+          if(deepStudyIds.includes(saved.deep))state.deep=saved.deep;
         }
       }catch{/* A malformed saved position should not prevent startup. */}
     }
@@ -293,6 +319,8 @@ async function init() {
     renderMain();updateReaderToggle();showSource();
     document.addEventListener('click',async event=>{
       const el=event.target.closest('button,a');if(!el)return;
+      if(el.hasAttribute('data-study-index')||el.dataset.studyPaper||el.dataset.studyDeep){state.view='studies';state.study=studyIds.includes(el.dataset.studyPaper)?el.dataset.studyPaper:null;state.deep=deepStudyIds.includes(el.dataset.studyDeep)?el.dataset.studyDeep:null;state.group='all';state.block=null;state.q='';$('#search').value='';renderMain(true,true);updateLocation(true);return;}
+      if(el.dataset.studySource&&paperById.has(el.dataset.studySource)){state.paper=el.dataset.studySource;state.page=Number(el.dataset.page)||1;state.context=null;state.view='library';renderMain(true,true);zoom=1;revealReader();updateLocation(true);showSource();return;}
       if(el.dataset.historyChapter&&historyRoutes.includes(el.dataset.historyChapter)){state.view='history';state.chapter=el.dataset.historyChapter;state.block=null;state.group='all';state.q='';$('#search').value='';renderMain(true,true);updateLocation(true);return;}
       if(el.dataset.studyView||el.dataset.lab){
         state.view=el.dataset.lab?'lab':el.dataset.studyView;

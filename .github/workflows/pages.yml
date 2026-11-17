@@ -41,6 +41,8 @@ jobs:
         env:
           HISTORY_PYTHON: python3
         run: node tools/check_history.mjs
+      - name: Check paper coverage, deep-reading formulas and examples
+        run: node tools/check_studies.mjs
       - uses: actions/configure-pages@v5
       - uses: actions/upload-pages-artifact@v3
         with:
