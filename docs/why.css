@@ -1,0 +1,31 @@
+.why-page{font-size:14px;line-height:2;overflow-wrap:anywhere}
+.why-page p{max-width:72ch}
+.why-page .guide-section{padding:26px 0}
+.why-page .guide-section>h2{font-size:20px;line-height:1.65;margin:0 0 18px}
+.why-page .guide-section p{margin:12px 0}
+.why-page summary{cursor:pointer;color:var(--blue);line-height:1.9}
+.why-index-row{padding:22px 0;border-top:1px solid var(--line)}
+.why-index-row h2{font-size:16px;line-height:1.8;margin:0 0 8px}
+.why-index-row p{margin:6px 0!important}
+.why-index-row .small-copy{color:var(--muted);font-size:13px}
+.why-context{padding:18px 0;margin:18px 0;border-block:1px solid var(--line);font-size:14px;line-height:1.9}
+.why-context p{margin:0 0 10px}
+.why-chain{max-width:520px;margin:24px 0}
+.why-chain svg{display:block;width:100%;height:auto}
+.why-chain text{font-family:inherit;font-size:20px;stroke:none}
+.why-chain figcaption{font-size:13px;line-height:1.9;color:var(--muted);margin-top:14px}
+.why-roles{margin:22px 0}
+.why-roles>div{border-top:1px solid var(--line);padding:18px 0}
+.why-roles dt{font-weight:650}.why-roles dt span{display:block;font-size:13px;color:var(--muted);font-weight:400}
+.why-roles dd{margin:10px 0 0}
+.why-table-scroll{overflow-x:auto;max-width:100%;margin:20px 0}
+.why-table-scroll table{width:100%;border-collapse:collapse;min-width:450px;text-align:left;font-size:13px;line-height:1.9}
+.why-table-scroll th,.why-table-scroll td{padding:14px 12px;border-bottom:1px solid var(--line);vertical-align:top}
+.why-table-scroll th{color:var(--ink);font-weight:650}
+.why-sources details{padding:16px 0;border-top:1px solid var(--line)}
+.why-sources details p{font-size:13px}
+.why-formula{border-block:1px solid var(--line);padding:20px 0}
+.why-formula .math{overflow-x:auto;padding:20px 0}
+.why-related{display:flex;flex-wrap:wrap;gap:10px;margin:18px 0}
+.why-page li{margin:10px 0}.why-page a{overflow-wrap:anywhere}
+@media(max-width:620px){.why-page{font-size:14px}.why-page .guide-section>h2{font-size:18px}.why-page .guide-section{padding:22px 0}.why-chain text{font-size:22px}.why-table-scroll th,.why-table-scroll td{padding:12px 9px}.why-context{font-size:13px}}
