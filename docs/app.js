@@ -365,7 +365,7 @@ async function init() {
       window.addEventListener('pagehide',()=>{for(const url of localUrls.values())URL.revokeObjectURL(url);});
     }
     for (const [id,name] of [['prev-page','prev'],['next-page','next'],['zoom-out','minus'],['zoom-in','plus'],['original-link','external'],['reader-expand','expand']]) $('#'+id).innerHTML=icon(name);
-    renderMain();updateReaderToggle();showSource();
+    renderMain();initRailScroll();updateReaderToggle();showSource();
     document.addEventListener('click',async event=>{
       const el=event.target.closest('button,a');if(!el)return;
       if(el.hasAttribute('data-why')&&(el.dataset.why==='overview'||methodIds.includes(el.dataset.why))){state.view='why';state.why=el.dataset.why;state.group='all';state.block=null;state.q='';$('#search').value='';renderMain(true,true);updateLocation(true);return;}
@@ -429,5 +429,26 @@ async function init() {
     console.error(error);
   }
 }
+function initRailScroll() {
+  const rail = $('#rail-scroll');
+  const slider = $('#rail-scrollbar');
+  const scrollRange = () => Math.max(0, rail.scrollHeight - rail.clientHeight);
+  const syncSlider = () => {
+    const range = scrollRange();
+    slider.hidden = !rail.clientHeight || range === 0;
+    slider.value = range ? Math.round(100 * rail.scrollTop / range) : 0;
+  };
+
+  slider.addEventListener('input', () => {
+    rail.scrollTop = scrollRange() * slider.valueAsNumber / 100;
+  });
+  rail.addEventListener('scroll', syncSlider, {passive: true});
+
+  const observer = new ResizeObserver(syncSlider);
+  observer.observe(rail);
+  observer.observe($('#group-nav'));
+  syncSlider();
+}
+
 init();
 
