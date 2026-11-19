@@ -4,14 +4,17 @@ import assert from 'node:assert/strict';
 import {
   mapIntro, mapLayers, mapCross, mapParts, mapDeltas, mapAdditions,
   mapLimits, mapPackaging, mapMethods, mapSteps, mapDemos, mapPartExamples,
+  mapCaseFlow, mapCases, mapTrial,
 } from '../docs/control-map-content.js';
 import {mapHTML, mapPartDetailHTML, mapMethodDetailHTML, mapMatches, mapResultsHTML, mapPartIds, demoSceneHTML} from '../docs/control-map.js';
 import {gainScene, consensusScene, barrierScene, GAIN, CONSENSUS, BARRIER} from '../docs/control-map-models.js';
 import {blocks} from '../docs/content.js';
 import {methodById} from '../docs/why-content.js';
 import {zeroIds, zeroLessonById} from '../docs/zero-content.js';
+import {paperProfiles} from '../docs/paper-profiles.js';
 
 const blockIds = new Set(blocks.map(block => block.id));
+const studyIds = new Set(paperProfiles.map(profile => profile.id));
 const zeroSet = new Set(zeroIds);
 const esc = value => String(value).replace(/[&<>"']/g, c => ({'&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'}[c]));
 const close = (actual, expected, label) => assert.ok(Math.abs(actual - expected) < 1e-9, `${label}: ${actual} != ${expected}`);
@@ -160,7 +163,10 @@ for (const demo of mapDemos) {
   assert.ok(!/undefined|NaN/.test(scene.readout + scene.visual), `demo ${demo.kind}: rendered undefined/NaN`);
 }
 assert.ok(demoSceneHTML('barrier', {margin: 0, drift: 2, nominal: 0.5}).readout.includes('允许区间为空'));
-assert.ok(demoSceneHTML('barrier', {margin: 0, drift: 2, nominal: 0.5}).visual.includes('安全输入区间为空'));
+assert.ok(demoSceneHTML('barrier', {margin: 0, drift: 2, nominal: 0.5}).visual.includes('CBF 允许区间为空'));
+const doorwayBarrier = barrierScene({margin: 0.1, drift: 1.4});
+close(doorwayBarrier.lower, 1.2, 'doorway barrier exercise');
+assert.equal(doorwayBarrier.feasible, false);
 
 // ---- rendered HTML ----
 const overview = mapHTML();
@@ -173,6 +179,15 @@ assert.ok(overview.includes('id="map-part-detail"') && overview.includes('id="ma
 assert.ok(overview.includes('map-structure') && overview.includes('map-delta') && overview.includes('map-limits') && overview.includes('map-usage'));
 assert.ok(!/undefined|NaN/.test(overview), 'overview rendered undefined/NaN');
 assert.ok(!overview.includes('data-demo-range='), 'the default part has no side example');
+assert.deepEqual(Object.keys(mapCases).sort(), [...partIds].sort());
+assert.equal(new Set(mapCaseFlow.map(step => step.part)).size, 5);
+for (const step of mapCaseFlow) {
+  assert.ok(partIds.includes(step.part));
+  assert.ok(overview.includes(`data-map-case-part="${step.part}"`));
+}
+assert.ok(overview.includes('虚构记录') && overview.includes(esc(mapTrial.answer)));
+assert.equal(mapTrial.rows.filter(row => row.fixed.endsWith('完成')).length, 3);
+assert.equal(mapTrial.rows.filter(row => row.reorder.endsWith('完成')).length, 2);
 assert.equal((overview.match(/map-chip-demo/g) || []).length, 3, 'three example badges');
 assert.equal((mapHTML('law').match(/data-demo-range="/g) || []).length, 1, 'gain example has one slider');
 assert.equal((mapHTML('guard').match(/data-demo-range="/g) || []).length, 3, 'CBF example has three sliders');
@@ -185,6 +200,13 @@ for (const part of mapParts) {
   assert.ok(detail.includes(esc(part.name)) && detail.includes(esc(part.en)), `${part.id}: detail identity`);
   assert.ok(detail.includes(part.duty) && detail.includes(part.output) && detail.includes(part.failure) && detail.includes(part.question), `${part.id}: detail fields`);
   assert.ok(detail.includes(part.multi), `${part.id}: multi-agent line`);
+  assert.ok(detail.includes(`data-doorway-case="${part.id}"`), `${part.id}: worked case`);
+  for (const key of ['title', 'failure', 'mechanism', 'check']) assert.ok(detail.includes(esc(mapCases[part.id][key])));
+  const source = mapCases[part.id].source;
+  if (source) {
+    assert.ok(studyIds.has(source[0]), `${part.id}: source profile`);
+    assert.ok(detail.includes(`data-study-paper="${source[0]}"`));
+  }
   assert.ok(detail.includes('典型例子'), `${part.id}: examples heading`);
   for (const example of mapPartExamples[part.id]) assert.ok(detail.includes(esc(example.name)), `${part.id}: example ${example.name}`);
   for (const [kind, id] of part.links) {
@@ -208,6 +230,7 @@ assert.ok(mapMatches('通信').parts.some(part => part.id === 'comm'));
 assert.ok(mapMatches('避碰').parts.some(part => part.id === 'guard'));
 assert.ok(mapMatches('饱和').limits.some(limit => limit.id === 'execute'));
 assert.ok(mapMatches('分布外').limits.some(limit => limit.id === 'learning'), 'search reaches limitation text');
+assert.ok(mapMatches('Luenberger').parts.some(part => part.id === 'estimate'), 'search reaches named examples');
 const results = mapResultsHTML(mapMatches('通信'));
 assert.ok(results.includes('data-map-open="comm"'));
 assert.ok(!/undefined|NaN/.test(results));

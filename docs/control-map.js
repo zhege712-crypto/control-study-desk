@@ -3,8 +3,9 @@
 import {
   mapIntro, mapLayers, mapCross, mapParts, mapDeltas, mapAdditions,
   mapLimits, mapPackaging, mapMethods, mapSteps, mapDemos, mapPartExamples,
-} from './control-map-content.js?v=20261119-map3';
-import {gainScene, consensusScene, barrierScene} from './control-map-models.js?v=20261119-map3';
+  mapCaseFlow, mapCases, mapTrial,
+} from './control-map-content.js?v=20261119-case1';
+import {gainScene, consensusScene, barrierScene} from './control-map-models.js?v=20261119-case1';
 import {blocks} from './content.js';
 import {methodById} from './why-content.js?v=20261117-why1';
 import {zeroIds, zeroLessonById} from './zero-content.js?v=20261118-zero2';
@@ -61,10 +62,10 @@ function barrierSVG(scene) {
   const ticks = [-1, 0, 1].map(value => `<line x1="${X(value).toFixed(1)}" y1="${track}" x2="${X(value).toFixed(1)}" y2="${track + 12}" stroke="#8b9eae"/><text x="${X(value).toFixed(1)}" y="${track + 26}" text-anchor="middle" font-size="8" fill="#687c8e">${value}</text>`).join('');
   const allowed = scene.feasible
     ? `<rect x="${X(scene.lower).toFixed(1)}" y="${track}" width="${Math.max(2, X(scene.upper) - X(scene.lower)).toFixed(1)}" height="12" fill="#dff0e8" stroke="#326a59"/>`
-    : '<text x="150" y="30" text-anchor="middle" font-size="9" fill="#9c4c2d">安全输入区间为空</text>';
+    : '<text x="150" y="30" text-anchor="middle" font-size="9" fill="#9c4c2d">CBF 允许区间为空</text>';
   const nominal = `<circle cx="${X(scene.nominal).toFixed(1)}" cy="${track + 6}" r="6" fill="none" stroke="#73538c" stroke-width="2"/>`;
   const filtered = scene.feasible ? `<circle cx="${X(scene.filtered).toFixed(1)}" cy="${track + 6}" r="4" fill="#265b87"/>` : '';
-  return `<svg viewBox="0 0 ${width} ${height}" role="img" aria-label="${esc(`一维输入轴：想做的输入 ${fmt(scene.nominal, 1)}，${scene.feasible ? `允许区间 ${fmt(scene.lower, 2)} 到 ${fmt(scene.upper, 2)}，过滤后 ${fmt(scene.filtered, 2)}` : '没有安全输入'}。紫色圆圈是想做的动作，蓝点是过滤结果，绿色段是允许区间。`)}"><rect x="18" y="${track}" width="264" height="12" fill="#eef2f5" stroke="#c4d0db"/>${allowed}${ticks}${nominal}${filtered}</svg>`;
+  return `<svg viewBox="0 0 ${width} ${height}" role="img" aria-label="${esc(`一维输入轴。紫色圆圈表示原指令 ${fmt(scene.nominal, 1)}。${scene.feasible ? `允许区间 ${fmt(scene.lower, 2)} 到 ${fmt(scene.upper, 2)}，过滤后 ${fmt(scene.filtered, 2)}` : '当前 CBF 允许区间为空'}。`)}"><rect x="18" y="${track}" width="264" height="12" fill="#eef2f5" stroke="#c4d0db"/>${allowed}${ticks}${nominal}${filtered}</svg>`;
 }
 
 function demoDefaults(demo) {
@@ -80,7 +81,7 @@ export function demoSceneHTML(kind, params) {
       refs: [{value: scene.target, label: '目标'}],
       aria: `位置随时间变化：比例增益 ${fmt(scene.gain, 1)}，最大超调 ${Math.round(scene.overshoot * 100)}%，虚线是目标位置。`,
     });
-    const readout = `<p><strong>k = ${fmt(scene.gain, 1)}：</strong>最大超调约 ${Math.round(scene.overshoot * 100)}%，${scene.settleLabel}。</p><p>k 小 → 慢但稳；k 大 → 快但更容易冲过头。这里只有比例增益可调，阻尼固定为 0.9。</p>`;
+    const readout = `<p><strong>k = ${fmt(scene.gain, 1)}。</strong>最大超调约 ${Math.round(scene.overshoot * 100)}%，${scene.settleLabel}。</p><p>分别试 k = 0.4 和 k = 1.2。对照首次接近目标与最后一次进入误差带的时刻。</p>`;
     return {readout, visual};
   }
   if (kind === 'consensus') {
@@ -88,18 +89,17 @@ export function demoSceneHTML(kind, params) {
     const visual = chartSVG({
       series: [0, 1, 2].map(index => ({color: CHART_COLORS[index], points: scene.points.map(point => [point[0], point[index + 1]])})),
       xMax: 40, yMin: 0, yMax: 15, yDigits: 0, xUnit: ' 步',
-      refs: [{value: scene.mean, label: '平均 6 m'}],
-      aria: `三台机器人的位置随步数变化：一致增益 ${fmt(scene.gain, 2)}，40 步后最大差距 ${fmt(scene.finalSpread, 2)} 米，虚线是保持不变的初始平均位置。`,
+      refs: [{value: scene.mean, label: '平均 6'}],
+      aria: `三台机器人的共享量随步数变化。一致增益 ${fmt(scene.gain, 2)}，40 步后最大差距 ${fmt(scene.finalSpread, 3)}，虚线表示平均值。`,
     });
-    const trend = scene.finalSpread < 0.01 ? '40 步后已经基本一致' : scene.finalSpread < 1 ? '差距已缩小，但还在缓慢收敛' : '差距仍然明显，增益接近稳定上限时会来回摆';
-    const readout = `<p><strong>g = ${fmt(scene.gain, 2)}：</strong>40 步后最大差距 ${fmt(scene.finalSpread, 2)} m（初始 14.00 m），平均值保持 ${fmt(scene.mean, 2)} m。</p><p>${trend}。增益太小 → 收敛慢；接近约 0.66 → 来回摆并更难收敛。</p>`;
+    const readout = `<p><strong>g = ${fmt(scene.gain, 2)}。</strong>40 步后最大差距 ${fmt(scene.finalSpread, 3)}，初始差距 14，平均值保持 ${fmt(scene.mean, 2)}。</p><p>对比 g = 0.05、0.20 和 0.65，观察 40 步的差距和三条曲线是否交替越过平均线。</p>`;
     return {readout, visual};
   }
   const scene = barrierScene(params);
   const visual = barrierSVG(scene);
   let readout;
   if (!scene.feasible) {
-    readout = `<p><strong>h = ${fmt(scene.margin, 2)}, b = ${fmt(scene.drift, 1)}, 想做的输入 ${signed(scene.nominal, 1)}：</strong>安全要求 u ≥ ${fmt(scene.lower, 2)}，但执行器最多 ${fmt(scene.upper, 2)}，允许区间为空。</p><p>这时没有安全输入：需要提前留余量、改任务或加执行能力，而不是让过滤器硬选一个动作。</p>`;
+    readout = `<p><strong>h = ${fmt(scene.margin, 2)}, b = ${fmt(scene.drift, 1)}。</strong>当前 CBF 条件要求 u ≥ ${fmt(scene.lower, 2)}，执行器最多 ${fmt(scene.upper, 2)}，允许区间为空。</p><p>该过滤器此刻无法给出满足条件的指令。下一步要检查系统是否还有可执行的回退动作。</p>`;
   } else if (scene.changed) {
     readout = `<p><strong>h = ${fmt(scene.margin, 2)}, b = ${fmt(scene.drift, 1)}：</strong>允许输入 [${signed(scene.lower, 2)}, ${fmt(scene.upper, 2)}]；想做的输入 ${signed(scene.nominal, 1)} 在界外，过滤后 u = ${signed(scene.filtered, 2)}。</p><p>安全条件（本例）：ḣ = −b + u，要求 ḣ + 2h ≥ 0，即 u ≥ b − 2h；再受执行器 −1 ≤ u ≤ 1 限制。</p>`;
   } else {
@@ -132,6 +132,21 @@ function examplesHTML(part) {
   return `<div class="map-examples"><h4>典型例子：控制器 / 算法 / 机制</h4><ul>${examples.map(example => `<li>${example.why ? `<button class="term-link" data-why="${esc(example.why)}">${esc(example.name)}</button>` : `<strong>${esc(example.name)}</strong>`}<span>${esc(example.note)}</span></li>`).join('')}</ul></div>`;
 }
 
+function caseHTML(part) {
+  const example = mapCases[part.id];
+  const source = example.source;
+  return `<section class="map-case" aria-label="窄门案例" data-doorway-case="${esc(part.id)}">
+    <h4>${esc(example.title)}</h4>
+    <dl>
+      <div><dt>遇到的卡点</dt><dd>${esc(example.failure)}</dd></div>
+      <div><dt>机制怎样介入</dt><dd>${esc(example.mechanism)}</dd></div>
+      <div><dt>怎样检查效果</dt><dd>${esc(example.check)}</dd></div>
+    </dl>
+    ${source ? `<p class="map-case-source"><button class="term-link" data-study-paper="${esc(source[0])}">读论文区块 · ${esc(source[1])}</button></p>` : ''}
+    ${part.id === 'evaluate' ? '<p class="map-case-source"><button class="term-link" data-map-jump="map-trial">查看三组对照记录</button></p>' : ''}
+  </section>`;
+}
+
 function partBodyHTML(part) {
   const index = mapParts.indexOf(part) + 1;
   return `<div class="map-detail-head">
@@ -144,6 +159,7 @@ function partBodyHTML(part) {
     <div><dt>常见失效</dt><dd>${esc(part.failure)}</dd></div>
     <div><dt>该问的问题</dt><dd>${esc(part.question)}</dd></div>
   </dl>
+  ${caseHTML(part)}
   <p class="map-detail-multi"><strong>多智能体时：</strong>${esc(part.multi)}</p>
   ${examplesHTML(part)}
   <div class="map-detail-links"><span>相关入口</span>${part.links.map(linkButton).join('')}</div>`;
@@ -193,6 +209,19 @@ function limitCard(limit) {
 
 const filterButtons = [['all', '全部'], ...mapLayers.map(layer => [layer.id, layer.name]), ['cross', '贯穿']];
 
+function trialHTML() {
+  return `<section class="map-trial" id="map-trial" aria-labelledby="map-trial-title">
+    <h3 id="map-trial-title">研究练习：同一扇门，两种调度</h3>
+    <p>${esc(mapTrial.setup)}</p>
+    <div class="map-table-scroll" role="region" aria-label="教学对照记录" tabindex="0"><table>
+      <caption>虚构记录，用于练习解释结果</caption>
+      <thead><tr><th scope="col">场景</th><th scope="col">固定顺序</th><th scope="col">可重排</th><th scope="col">记录</th></tr></thead>
+      <tbody>${mapTrial.rows.map(row => `<tr><th scope="row">${esc(row.scene)}</th><td>${esc(row.fixed)}</td><td>${esc(row.reorder)}</td><td>${esc(row.observation)}</td></tr>`).join('')}</tbody>
+    </table></div>
+    <details><summary>${esc(mapTrial.question)}</summary><p>${esc(mapTrial.answer)}</p><p>${esc(mapTrial.next)}</p></details>
+  </section>`;
+}
+
 export function mapHTML(partId = 'goal') {
   const selected = partById.has(partId) ? partId : mapParts[0].id;
   const selectedHasDemo = demoByPart.has(selected);
@@ -205,8 +234,12 @@ export function mapHTML(partId = 'goal') {
         <button data-map-jump="map-structure">组成</button>
         <button data-map-jump="map-delta">多智能体增量</button>
         <button data-map-jump="map-limits">局限</button>
-        <button data-map-jump="map-usage">用法</button>
+        <button data-map-jump="map-usage">方法定位</button>
+        <button data-map-jump="map-trial">研究练习</button>
       </nav>
+      <ol class="map-case-flow" aria-label="窄门任务中各个模块怎样配合">
+        ${mapCaseFlow.map(step => `<li><button type="button" data-map-case-part="${esc(step.part)}"><strong>${esc(step.label)}</strong><span>${esc(step.detail)}</span></button></li>`).join('')}
+      </ol>
     </header>
 
     <section class="map-section" id="map-structure" aria-labelledby="map-structure-title">
@@ -238,10 +271,10 @@ export function mapHTML(partId = 'goal') {
 
     <section class="map-section" id="map-delta" aria-labelledby="map-delta-title">
       <h2 id="map-delta-title">二、多智能体比一般控制多了什么</h2>
-      <p class="map-intro-line">不是控制律变复杂，而是每个部分从“单体、集中、全局”变成“局部、异步、相互影响”，并新增通信、组织与耦合安全。</p>
+      <p class="map-intro-line">机器人各自看见局部、各自执行，动作会相互影响。三车跟驰也有类似结构，一辆看见前车减速后开始制动，后车同时受到测量延迟、执行滞后和车距限制。信息也可集中共享，论文需要交代具体架构。</p>
       <div class="map-table-scroll" role="region" aria-label="一般控制与多智能体控制对照" tabindex="0"><table>
-        <caption>一般控制与多智能体控制的逐维对照（教学整理）</caption>
-        <thead><tr><th scope="col">维度</th><th scope="col">一般控制</th><th scope="col">多智能体新增</th><th scope="col">直接后果</th></tr></thead>
+        <caption>单机与多智能体控制的典型对照</caption>
+        <thead><tr><th scope="col">维度</th><th scope="col">单机示例</th><th scope="col">多智能体变化</th><th scope="col">直接后果</th></tr></thead>
         <tbody>${mapDeltas.map(row => `<tr><th scope="row">${esc(row.dim)}</th><td>${esc(row.single)}</td><td>${esc(row.added)}</td><td>${esc(row.effect)}</td></tr>`).join('')}</tbody>
       </table></div>
       <div class="map-additions">${mapAdditions.map(item => `<div><h3>${esc(item.name)}</h3><p>${esc(item.text)}</p></div>`).join('')}</div>
@@ -265,6 +298,7 @@ export function mapHTML(partId = 'goal') {
         <div class="map-methods" role="group" aria-label="选择一个方法">${mapMethods.map(method => `<button data-map-method="${esc(method.id)}" aria-pressed="${method.id === mapMethods[0].id}" class="${method.id === mapMethods[0].id ? 'is-selected' : ''}">${esc(method.name)}</button>`).join('')}</div>
         <div class="map-method-detail" id="map-method-detail" aria-live="polite">${mapMethodDetailHTML(mapMethods[0].id)}</div>
       </div>
+      ${trialHTML()}
       <div class="map-next">
         <p>下一步：<button class="term-link" data-study-view="zero">走 12 课零基础入门</button> · <button class="term-link" data-why="overview">按困难读 14 章</button> · <button class="term-link" data-study-view="research">把判断写成研究行动单</button></p>
       </div>
@@ -276,7 +310,10 @@ export function mapMatches(query) {
   const q = String(query ?? '').trim().toLocaleLowerCase();
   if (!q) return {parts: [], limits: []};
   const hit = value => String(value).toLocaleLowerCase().includes(q);
-  const parts = mapParts.filter(part => [part.name, part.en, part.duty, part.output, part.failure, part.question, part.multi].some(hit));
+  const parts = mapParts.filter(part => [
+    part.name, part.en, part.duty, part.output, part.failure, part.question, part.multi,
+    mapCases[part.id].title, ...mapPartExamples[part.id].map(example => example.name),
+  ].some(hit));
   const limits = mapLimits.filter(limit => [limit.title, limit.limitation, limit.symptom, limit.question].some(hit));
   return {parts, limits};
 }
@@ -351,14 +388,17 @@ export function mountMap(root, {onSelect} = {}) {
   const jumpTo = id => {
     const target = root.querySelector('#' + id), main = root.closest('main');
     if (!target || !main) return;
-    main.scrollTo({top: main.scrollTop + target.getBoundingClientRect().top - main.getBoundingClientRect().top - 14, behavior: 'smooth'});
-    const heading = target.querySelector('h2');
+    const behavior = window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth';
+    main.scrollTo({top: main.scrollTop + target.getBoundingClientRect().top - main.getBoundingClientRect().top - 14, behavior});
+    const heading = target.querySelector('h2, h3');
     heading?.setAttribute('tabindex', '-1');
     heading?.focus({preventScroll: true});
   };
   const onClick = event => {
     const jump = event.target.closest('[data-map-jump]');
     if (jump) { jumpTo(jump.dataset.mapJump); return; }
+    const caseStep = event.target.closest('[data-map-case-part]');
+    if (caseStep) { selectPart(caseStep.dataset.mapCasePart); jumpTo('map-part-detail'); return; }
     const reset = event.target.closest('[data-demo-reset]');
     if (reset) {
       const panel = reset.closest('.map-demo');
@@ -369,7 +409,11 @@ export function mountMap(root, {onSelect} = {}) {
     const demoJump = event.target.closest('[data-map-demo-jump]');
     if (demoJump) { selectPart(demoJump.dataset.mapDemoJump); jumpTo('map-structure'); return; }
     const chip = event.target.closest('[data-map-part]');
-    if (chip) { selectPart(chip.dataset.mapPart); return; }
+    if (chip) {
+      selectPart(chip.dataset.mapPart);
+      if (!chip.classList.contains('map-chip')) jumpTo('map-part-detail');
+      return;
+    }
     const method = event.target.closest('[data-map-method]');
     if (method) { selectMethod(method.dataset.mapMethod); return; }
     const filter = event.target.closest('[data-map-filter]');

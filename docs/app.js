@@ -6,7 +6,7 @@ import {visualsHTML,mountVisuals,visualIds,inlineVisual,conceptVisuals} from './
 import {whyHTML,mountWhy,whyMatches,whyResultsHTML,methodContext} from './why.js?v=20261117-why1';
 import {methodIds} from './why-content.js?v=20261117-why1';
 import {zeroHTML,mountZero,zeroIds,zeroMatches,zeroResultsHTML} from './zero.js?v=20261118-zero2';
-import {mapHTML,mountMap,mapMatches,mapResultsHTML,mapPartIds} from './control-map.js?v=20261119-map3';
+import {mapHTML,mountMap,mapMatches,mapResultsHTML,mapPartIds} from './control-map.js?v=20261119-case1';
 
 const $ = selector => document.querySelector(selector);
 const esc = value => String(value).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
@@ -205,7 +205,7 @@ function renderMain(reset=true,moveFocus=false) {
   if(state.view==='map')document.title='控制的结构：组成、多智能体增量与局限 · 论文学习台';
   if(state.view==='detail')$('#main-content .detail-header').insertAdjacentHTML('afterend',methodContext(state.block));
   if(['start','history','research'].includes(state.view))$('#main-content').insertAdjacentHTML('afterbegin','<p class="why-context"><button class="term-link" data-study-view="map">先看控制结构地图</button>，再问：<button class="term-link" data-why="overview">这些控制方法到底解决了什么？</button></p>');
-  if(state.view==='why'&&state.why==='overview')$('#main-content').insertAdjacentHTML('afterbegin','<p class="why-context">第一次接触控制？先看 <button class="term-link" data-study-view="map">控制结构地图</button> 定位，或走 <button class="term-link" data-study-view="zero">12 课零基础入门</button>。</p>');
+  if(state.view==='why'&&state.why==='overview')$('#main-content').insertAdjacentHTML('afterbegin','<p class="why-context"><button class="term-link" data-study-view="map">把窄门案例放回控制结构地图</button>，看各模块怎样接力。第一次学控制可以走 <button class="term-link" data-study-view="zero">12 课零基础入门</button>。</p>');
   if(state.q.trim()){
     const methods=whyMatches(state.q);
     if(methods.length)$('#main-content .overview-description').insertAdjacentHTML('afterend',`<section class="history-page why-page" aria-label="按问题找到方法"><h2>这些方法解决什么问题</h2>${whyResultsHTML(methods)}</section>`);

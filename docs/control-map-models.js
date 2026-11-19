@@ -26,13 +26,13 @@ export function gainScene(gain = 1.2) {
   return {
     gain, target, points, overshoot,
     settleTime: settleStep === null ? null : settleStep * dt,
-    settleLabel: settleStep === null ? '8 s 内没有进入 ±5%' : `${(settleStep * dt).toFixed(1)} s 后进入 ±5%`,
+    settleLabel: settleStep === null ? '未在观察期内稳定留在 ±5% 带内' : `约 ${(settleStep * dt).toFixed(1)} s 后持续留在 ±5% 带内（截至 8 s）`,
   };
 }
 
 // Three robots on a line. Each only exchanges information with its direct neighbour.
 // Every exchange is zero-sum, so the average is preserved while the spread shrinks on a
-// stable gain range. This three-node chain loses stability above about g = 0.66.
+// stable gain range. The two disagreement modes have multipliers 1-g and 1-3g.
 export const CONSENSUS = Object.freeze({initial: [0, 4, 14], steps: 40, mean: 6});
 
 export function consensusScene(gain = 0.2) {
@@ -48,12 +48,12 @@ export function consensusScene(gain = 0.2) {
     points.push([k, ...positions]);
   }
   const spread = Math.max(...positions) - Math.min(...positions);
-  return {gain, points, initialSpread: 14, finalSpread: spread, mean: CONSENSUS.mean, oscillates: gain >= 0.6, diverges: gain > 0.66};
+  return {gain, points, initialSpread: 14, finalSpread: spread, mean: CONSENSUS.mean};
 }
 
 // Scalar barrier-filter teaching example. The safety margin h has margin dynamics
 // hdot = -b + u; a simplified CBF condition hdot + 2h >= 0 gives u >= b - 2h.
-// The actuator only accepts -1 <= u <= 1, so some states have no safe input at all.
+// The actuator only accepts -1 <= u <= 1, so some states do not admit a CBF-feasible input.
 export const BARRIER = Object.freeze({alpha: 2, uMin: -1, uMax: 1});
 
 export function barrierScene({margin = 0.2, drift = 0, nominal = -1} = {}) {
