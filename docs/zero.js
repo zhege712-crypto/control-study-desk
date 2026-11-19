@@ -1,4 +1,4 @@
-﻿// Render and mount the zero-background course (#view=zero). Pure render functions stay free of
+// Render and mount the zero-background course (#view=zero). Pure render functions stay free of
 // DOM access so tools/check_zero.mjs can import this module under Node.
 import {
   zeroIntro, zeroParts, zeroLessons, zeroLessonById, zeroPlacement, zeroNextSteps, zeroFaq,
@@ -109,7 +109,7 @@ function overviewHTML() {
     ${labIndexHTML()}
     ${glossaryHTML()}
     ${nextStepsHTML()}
-    <p class="zero-note">这一版是新增的入门路线，原有“初学者入口”“看图理解数学”“论文区块”等内容保持不变；两套入口可以互相跳转。</p>
+    <p class="zero-note">这一版是新增的入门路线，原有“初学者入口”“看图理解数学”“论文区块”等内容保持不变；两套入口可以互相跳转。想先看四层十部分的结构，可打开 <button class="term-link" data-study-view="map">控制结构地图</button>。</p>
   </article>`;
 }
 
